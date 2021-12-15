@@ -89,7 +89,6 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
       Please add <b>up to 10 other repos</b> you want to support and the percentages of the donated funds that will be forwarded to them.
     </p>
     <Form validateTrigger={["onChange"]} size="large" preserve={false} onInvalid={() => setIsError(false)} autoComplete="off" onValuesChange={(_, values) => values.rules && setValues(values.rules)} onFieldsChange={(_, allFields) => {
-      console.log("allFields", allFields)
       if (allFields.find(field => field.errors?.length || (field.name && typeof field.name === "object" && field.name.length === 1 && isArray(field.value) && field.value.findIndex((v) => !v?.repo || !v?.percent || !v) >= 0))) {
         setIsError(true)
       } else {
