@@ -1,0 +1,40 @@
+.headerWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.avatar {
+  margin-right: 20px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.label {
+  color: #767676;
+}
+
+.buttonWrap {
+  margin-top: 10px;
+}
+
+.warning {
+  margin-top: 10px;
+  color: #767676;
+}
+
+.optionWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  width: calc(1em + 8px);
+  height: calc(1em + 8px);
+  margin-right: 5px;
+  margin-top: -6px;
+  margin-bottom: -6px;
+}

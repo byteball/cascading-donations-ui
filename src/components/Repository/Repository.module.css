@@ -1,0 +1,49 @@
+.itemWrapper {
+  display: block;
+  overflow: hidden;
+  margin: 5px;
+  margin-bottom: 25px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  user-select: 0;
+  color: #232323;
+}
+
+.item_notLink {
+  margin: 5px;
+  margin-bottom: 25px;
+  background-color: blue;
+}
+
+.item_disable {
+  opacity: 0.2;
+}
+
+.avatar {
+  margin-right: 10px;
+}
+
+.fullName {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.description {
+  color: #909090;
+  font-size: 14px;
+  /* line-height: 1.4; */
+}
+
+.metaItem {
+  margin-right: 10px;
+}
+
+.metaWrap {
+  font-size: 12px;
+  margin-top: 2px;
+}
