@@ -1,0 +1,14 @@
+{
+  "short_name": "Kivach",
+  "name": "Simple, fast and secure donations to ant github repository",
+  "icons": [
+    {
+      "src": "logo.svg",
+      "type": "image/svg"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

@@ -1,0 +1,15 @@
+.itemWrap{
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  max-width: 700px;
+}
+
+.avatar {
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.timeLink {
+  color: #333
+}

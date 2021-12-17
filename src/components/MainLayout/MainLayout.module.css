@@ -1,0 +1,34 @@
+.navLink {
+  color: #fff;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+.navLink:hover {
+  color: #fff;
+}
+
+.brand {
+  line-height: normal;
+  margin-left: 15px;
+}
+
+.logo {
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.content {
+  padding-top: 50px;
+}
+
+.layout {
+  min-height: 100vh;
+}
+
+.drawerWrap {
+  display: flex;
+  align-items: center;
+}

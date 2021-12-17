@@ -1,0 +1,91 @@
+body {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.container {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 15px;
+  padding-left: 15px
+}
+
+@media (min-width: 476px) {
+  .container {
+    padding-right: 15px;
+    padding-left: 15px
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-right: 15px;
+    padding-left: 15px
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    padding-right: 15px;
+    padding-left: 15px
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    padding-right: 15px;
+    padding-left: 15px
+  }
+}
+
+@media (min-width: 476px) {
+  .container {
+    width: 100%
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    width: 720px;
+    max-width: 100%
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    width: 960px;
+    max-width: 100%
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    width: 1140px;
+    max-width: 100%
+  }
+}
+
+/* @media (min-width: 1400px) {
+  .container {
+    width: 1340px;
+    max-width: 100%
+  }
+} */
+
+.itemWithSelectIcons .ant-select-open .ant-select-selection-item {
+  opacity: .08 !important;
+  color: #141414 !important;
+}
+
+.ant-menu .ant-menu-item-selected, .ant-layout .ant-menu .ant-menu-item-active {
+  background-color: transparent !important;
+}
+
+.ant-menu .ant-menu-item-selected .ant-menu-title-content a, .ant-layout .ant-menu .ant-menu-item-active .ant-menu-title-content a {
+  opacity: 0.5 !important;
+}
+
+.ant-steps-item-icon {
+  line-height: 30px !important;
+}

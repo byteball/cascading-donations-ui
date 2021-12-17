@@ -1,0 +1,33 @@
+.optionDescription {
+  color: #353b48;
+}
+
+.title {
+  /* text-transform: uppercase; */
+  font-weight: bold;
+  font-size: 58px;
+  margin-top: 0;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.subTitle {
+  font-weight: 300;
+  color: #353b48;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  font-size: 18px;
+  max-width: 400px;
+}
+
+.select {
+  max-width: 400px;
+  border: 2px solid #0037ff;
+  border-radius: 5px;
+}
+
+@media (max-width: 600px) {
+  .title {
+    font-size: 42px;
+  }
+}

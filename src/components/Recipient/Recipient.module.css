@@ -1,0 +1,9 @@
+.itemWrap{
+  display: flex;
+  margin-bottom: 15px;
+  align-items: center;
+}
+
+.avatar {
+  margin-right: 10px;
+}
