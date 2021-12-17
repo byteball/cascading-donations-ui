@@ -4,5 +4,6 @@ export default {
   aa_attestor: process.env.REACT_APP_AA_ATTESTOR!,
   icon_cdn_url: process.env.REACT_APP_ICON_CDN_URL,
   backend_url: process.env.REACT_APP_BACKEND_URL,
-  client_url: process.env.REACT_APP_CLIENT_URL
+  client_url: process.env.REACT_APP_CLIENT_URL,
+  pairing_url: process.env.REACT_APP_PAIRING_URL
 }

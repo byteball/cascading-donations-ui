@@ -7,10 +7,10 @@ import { IContributor } from 'store/slices/cacheSlice';
 import styles from "./Contributor.module.css";
 
 const LOGIN_MAX_LENGTH = 15;
-const COUNT_SHOW_ON_PAGE = 10;
+const COUNT_SHOWN_ON_PAGE = 10;
 
 const ContributorItem: React.FC<IContributor> = ({ login, contributions }) => {
-  const avatarLink = getAvatarLink(login || "t3afak4se43aafa"); // or a not exist user
+  const avatarLink = getAvatarLink(login || "t3afak4se43aafa"); // or a not exists user
   return <div className={styles.itemWrap}>
     <Avatar src={avatarLink} size={30} className={styles.avatar} />
     <div>
@@ -40,7 +40,7 @@ const ContributorList: React.FC<IContributorList> = memo(({ data, prefixForKeys,
     locale={{ emptyText: "No repositories" }}
     rowKey={(contributor => `${prefixForKeys} - ${contributor.login} - ${contributor.contributions}`)}
     renderItem={contributor => <ContributorItem {...contributor} />}
-    pagination={{ defaultPageSize: COUNT_SHOW_ON_PAGE, hideOnSinglePage: true }}
+    pagination={{ defaultPageSize: COUNT_SHOWN_ON_PAGE, hideOnSinglePage: true }}
     size="large"
     {...rest}
   />

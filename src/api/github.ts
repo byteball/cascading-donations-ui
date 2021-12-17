@@ -44,7 +44,7 @@ class Github {
 
         store.dispatch(updateCacheItem({
           data: newData,
-          identificator: fullName,
+          identifier: fullName,
           type: "basicInfo"
         }))
 
@@ -60,7 +60,7 @@ class Github {
 
         store.dispatch(updateCacheItem({
           data: newData,
-          identificator: fullName,
+          identifier: fullName,
           type: "basicInfo"
         }))
 
@@ -90,14 +90,14 @@ class Github {
 
         store.dispatch(updateCacheItem({
           data: newData,
-          identificator: fullName,
+          identifier: fullName,
           type: "contributors"
         }))
         return newData;
       } catch {
         store.dispatch(updateCacheItem({
           data: [],
-          identificator: fullName,
+          identifier: fullName,
           type: "contributors"
         }))
         return []
@@ -138,7 +138,7 @@ class Github {
         }
         store.dispatch(updateCacheItem({
           data: repos,
-          identificator: owner,
+          identifier: owner,
           type: "reposList"
         }))
 
@@ -147,7 +147,7 @@ class Github {
         if (e && e.message && e.message === "Not Found") {
           store.dispatch(updateCacheItem({
             data: repos,
-            identificator: owner,
+            identifier: owner,
             type: "reposList"
           }))
         }
@@ -189,7 +189,7 @@ class Github {
 
   checkBanner = async (fullName: string): Promise<boolean> => {
     const state = store.getState();
-    const allCache = state.cache.existBanner.data;
+    const allCache = state.cache.bannerExists.data;
     const item = allCache[fullName];
     const [owner, repo] = fullName.split("/");
     const bannerCode = generateBannerCode(fullName);
@@ -203,20 +203,20 @@ class Github {
 
         if (content.content) {
           const readme = window.atob(content.content);
-          const isExist = readme?.includes(bannerCode) || false;
+          const exists = readme?.includes(bannerCode) || false;
 
           store.dispatch(updateCacheItem({
-            data: isExist,
-            identificator: fullName,
-            type: "existBanner"
+            data: exists,
+            identifier: fullName,
+            type: "bannerExists"
           }))
 
-          return isExist;
+          return exists;
         } else {
           store.dispatch(updateCacheItem({
             data: false,
-            identificator: fullName,
-            type: "existBanner"
+            identifier: fullName,
+            type: "bannerExists"
           }))
           return false;
         }
@@ -225,8 +225,8 @@ class Github {
       } catch {
         store.dispatch(updateCacheItem({
           data: false,
-          identificator: fullName,
-          type: "existBanner"
+          identifier: fullName,
+          type: "bannerExists"
         }))
         return false;
       }

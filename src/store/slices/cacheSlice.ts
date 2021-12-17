@@ -40,10 +40,10 @@ export interface ICacheSlice {
   basicInfo: ICacheItemList<IRepoInfo>,
   contributors: ICacheItemList<IContributor[]>,
   reposList: ICacheItemList<ISearchResultItem[]>
-  existBanner: ICacheItemList<boolean>
+  bannerExists: ICacheItemList<boolean>
 }
 
-export type cacheType = "basicInfo" | "contributors" | "reposList" | "existBanner";
+export type cacheType = "basicInfo" | "contributors" | "reposList" | "bannerExists";
 
 
 const initialState: ICacheSlice = {
@@ -64,7 +64,7 @@ const initialState: ICacheSlice = {
     data: {},
     retention_period: 60 * 60 // 1 hour
   },
-  existBanner: {
+  bannerExists: {
     data: {},
     retention_period: 60 * 60 * 24 // 1 day
   }
@@ -85,9 +85,9 @@ export const cacheSlice = createSlice({
     });
 
     builder.addCase(updateCacheItem.type, (state, action: PayloadAction<IUpdateActionPayload>) => {
-      const { data, type, identificator } = action.payload;
+      const { data, type, identifier } = action.payload;
       if (type in state) {
-        state[type].data[identificator] = {
+        state[type].data[identifier] = {
           data,
           status: "loaded",
           update_at: Math.ceil(Date.now() / 1000)
@@ -98,35 +98,35 @@ export const cacheSlice = createSlice({
     builder.addCase(clearAllCache.type, (state) => {
       const timestamp = Math.floor(Date.now() / 1000);
       const contributorsCache = state.contributors.data;
-      const existBannerCache = state.existBanner.data;
+      const bannerExistsCache = state.bannerExists.data;
       const reposListCache = state.reposList.data;
       const basicInfoCache = state.basicInfo.data;
 
       // clear contributors cache
-      Object.keys(contributorsCache).forEach((identificator) => {
-        if ((contributorsCache[identificator].update_at + state.contributors.retention_period) < timestamp) {
-          delete state.contributors.data[identificator];
+      Object.keys(contributorsCache).forEach((identifier) => {
+        if ((contributorsCache[identifier].update_at + state.contributors.retention_period) < timestamp) {
+          delete state.contributors.data[identifier];
         }
       });
 
-      // clear existBanner cache
-      Object.keys(existBannerCache).forEach((identificator) => {
-        if ((existBannerCache[identificator].update_at + state.existBanner.retention_period) < timestamp) {
-          delete state.existBanner.data[identificator];
-        }
-      });
-
-      // clear reposList cache
-      Object.keys(reposListCache).forEach((identificator) => {
-        if ((reposListCache[identificator].update_at + state.reposList.retention_period) < timestamp) {
-          delete state.reposList.data[identificator];
+      // clear bannerExists cache
+      Object.keys(bannerExistsCache).forEach((identifier) => {
+        if ((bannerExistsCache[identifier].update_at + state.bannerExists.retention_period) < timestamp) {
+          delete state.bannerExists.data[identifier];
         }
       });
 
       // clear reposList cache
-      Object.keys(basicInfoCache).forEach((identificator) => {
-        if ((basicInfoCache[identificator].update_at + state.basicInfo.retention_period) < timestamp) {
-          delete state.basicInfo.data[identificator];
+      Object.keys(reposListCache).forEach((identifier) => {
+        if ((reposListCache[identifier].update_at + state.reposList.retention_period) < timestamp) {
+          delete state.reposList.data[identifier];
+        }
+      });
+
+      // clear reposList cache
+      Object.keys(basicInfoCache).forEach((identifier) => {
+        if ((basicInfoCache[identifier].update_at + state.basicInfo.retention_period) < timestamp) {
+          delete state.basicInfo.data[identifier];
         }
       });
     })

@@ -18,8 +18,8 @@ interface IReposList {
   data: ISearchResultItem[]
 }
 
-interface ILoadedRulesExist {
-  isExist: boolean;
+interface ILoadedRulesExists {
+  exists: boolean;
   status: "loading" | "loaded";
 }
 
@@ -32,7 +32,7 @@ export const LastStep = () => {
   const [selectedRepoName, setSelectedRepoName] = useState<string | undefined>();
   const [reposList, setReposList] = useState<IReposList>({ status: "loading", data: [] });
   const [pools, setPools] = useState<ILoadedPools>({ pools: [], status: "loading" });
-  const [rulesExist, setRulesExist] = useState<ILoadedRulesExist>({ isExist: false, status: "loading" });
+  const [rulesExists, setRulesExists] = useState<ILoadedRulesExists>({ exists: false, status: "loading" });
 
   const githubUser = useSelector(selectGithubUser);
   const tokens = useSelector(selectObyteTokens);
@@ -46,8 +46,8 @@ export const LastStep = () => {
 
   const getRules = useCallback(async () => {
     if (selectedRepoName) {
-      setRulesExist({ isExist: false, status: "loading" })
-      await Agent.getRules(selectedRepoName).then(([_, isExist]) => setRulesExist({ status: "loaded", isExist }));
+      setRulesExists({ exists: false, status: "loading" })
+      await Agent.getRules(selectedRepoName).then(([_, exists]) => setRulesExists({ status: "loaded", exists }));
     }
   }, [selectedRepoName])
 
@@ -81,11 +81,11 @@ export const LastStep = () => {
     </Form>
 
     {selectedRepoName && <div>
-      {rulesExist.status !== "loading" && pools.status !== "loading" ? <div>
+      {rulesExists.status !== "loading" && pools.status !== "loading" ? <div>
 
         {pools.pools?.length > 0 && <div><b>Donated so far: </b>{pools.pools.map((pool) => <span key={`donated-so-far-${pool.asset}`}>{(tokens && tokens[pool.asset]) ? `${pool.amount / 10 ** tokens[pool.asset].decimals} ${tokens[pool.asset].symbol}` : `${pool.amount} ${truncate(pool.asset, 15)}`}; </span>)}</div>}
 
-        {!rulesExist.isExist && <div style={{ marginTop: 30, maxWidth: 700 }}>
+        {!rulesExists.exists && <div style={{ marginTop: 30, maxWidth: 700 }}>
           <Typography.Title level={3}>Set up distribution rules for {selectedRepoName}</Typography.Title>
           <ChangeRules fullName={selectedRepoName} />
         </div>}

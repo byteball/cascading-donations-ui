@@ -4,7 +4,7 @@ import { cacheType } from "store/slices/cacheSlice";
 
 export interface IUpdateActionPayload {
   type: cacheType,
-  identificator: string,
+  identifier: string,
   data: any
 }
 

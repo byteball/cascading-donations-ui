@@ -34,8 +34,13 @@ export const MainLayout: React.FC = ({ children }) => {
         <NavLink to="/" className={styles.navLink}>
           <img className={styles.logo} src="/logo-inverse.svg" alt="Kivach" />
 
-          <div style={{ paddingLeft: 10 }}>
-            <span>Kivach</span>
+          <div className={styles.brand}>
+            <div>
+              <span>Kivach</span>
+            </div>
+            <div>
+              <small>Cascading donations</small>
+            </div>
           </div>
         </NavLink>
         {width >= 990 ? (

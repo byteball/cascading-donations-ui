@@ -7,7 +7,7 @@ import { getAvatarLink, truncate } from "utils";
 import styles from "./Recipient.module.css";
 
 const LOGIN_MAX_LENGTH = 15;
-const COUNT_SHOW_ON_PAGE = 10;
+const COUNT_SHOWN_ON_PAGE = 10;
 
 export interface IParsedRule {
   repo: string;
@@ -48,7 +48,7 @@ const RecipientList: React.FC<IRecipientList> = memo(({ data, prefixForKeys }) =
     locale={{ emptyText: "No recipients" }}
     rowKey={(recipient => `${prefixForKeys} - ${recipient.repo}`)}
     renderItem={recipient => <RecipientItem {...recipient} />}
-    pagination={{ defaultPageSize: COUNT_SHOW_ON_PAGE, hideOnSinglePage: true }}
+    pagination={{ defaultPageSize: COUNT_SHOWN_ON_PAGE, hideOnSinglePage: true }}
     size="large"
   />
 })

@@ -10,6 +10,11 @@
   color: #fff;
 }
 
+.brand {
+  line-height: normal;
+  margin-left: 15px;
+}
+
 .logo {
   height: 40px;
   flex-shrink: 0;

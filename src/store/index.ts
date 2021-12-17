@@ -27,8 +27,8 @@ const rootReducer = combineReducers({
 });
 
 const persistConfig = {
-  key: `new-obyte-donations${config.testnet ? "-testnet" : ""}`,
-  version: 10,
+  key: `cascading-donations${config.testnet ? "-testnet" : ""}`,
+  version: 1,
   storage,
   whitelist: ["settings", "cache"],
 }

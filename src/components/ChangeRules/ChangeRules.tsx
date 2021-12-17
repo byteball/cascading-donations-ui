@@ -117,7 +117,7 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
                           if (n.split("/").length !== 2) {
                             return Promise.reject(new Error('Not valid repo'));
                           } else if (values.filter((f: any) => f && (f.repo === n)).length >= 2 || fullName === n) {
-                            return Promise.reject(new Error('Repo already exist'));
+                            return Promise.reject(new Error('Repo already exists'));
                           } else {
                             const [owner, name] = n.split("/");
                             if (!owner || owner.length === 0 || !name || name.length === 0) {

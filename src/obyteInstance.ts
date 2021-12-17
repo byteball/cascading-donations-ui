@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message, notification } from "antd";
 import config from "config";
 import obyte from "obyte";
 import { store } from "store";
@@ -7,12 +7,14 @@ import { addResponse } from "store/slices/responsesSlice";
 import { getAaResponses } from "store/thunks/getAaResponses";
 
 export const client = new obyte.Client(
-  `wss://byteball.org/bb${true ? "-test" : ""}`,
+  `wss://obyte.org/bb${config.testnet ? "-test" : ""}`,
   {
-    testnet: true,
+    testnet: config.testnet,
     reconnect: true,
   }
 );
+
+const getAAPayload = (messages: Array<any> = []) => messages.find(m => m.app === 'data')?.payload || {};
 
 client.onConnect(() => {
   store.dispatch(getAaResponses());
@@ -29,12 +31,20 @@ client.onConnect(() => {
   client.subscribe(async (_, result) => {
     const { subject, body, } = result[1];
     const { unit, aa_address } = body;
-    const author = unit?.authors?.[0]?.address;
+ 
+    const messages = unit?.messages;
+    const payload = getAAPayload(messages);
+    const author = payload?.donor || unit?.authors?.[0]?.address;
 
     if (subject === "light/aa_request") {
       const state = store.getState();
       if (state.settings.walletAddress === author) {
         message.success("We have received your request. The interface will update after the transaction stabilizes");
+      } else if (payload && ("donate" in payload) && ("repo" in payload)) {
+        notification.open({
+          message: `${author.slice(0, 10)}... donated to ${payload.repo}`,
+          type: "info"
+        });
       }
     } else if (subject === "light/aa_response" && aa_address === config.aa_address) {
       store.dispatch(addResponse(body));
@@ -43,7 +53,6 @@ client.onConnect(() => {
 
   // @ts-ignore
   client.client.ws.addEventListener("close", () => {
-    // store.dispatch(closeConnection());
     clearInterval(heartbeat);
   });
 })

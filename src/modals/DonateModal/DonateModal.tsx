@@ -22,7 +22,7 @@ interface IDonateModal {
 
 type network = "Obyte" | "Ethereum" | "BSC" | "Polygon";
 
-type poolsStatus = "loading" | "exist" | "not-exist"
+type poolsStatus = "loading" | "exists" | "not-exists"
 
 const f = (x: string) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
@@ -61,7 +61,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
   const findPool = async () => {
     if (token?.obyte_asset) {
       const pool = await findOswapPool(token.obyte_asset, "base", config.testnet, client);
-      setPoolStatus(pool ? "exist" : "not-exist");
+      setPoolStatus(pool ? "exists" : "not-exists");
     }
   }
 
@@ -86,7 +86,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
       findPool();
       getMaxAmount();
     } else {
-      setPoolStatus("not-exist");
+      setPoolStatus("not-exists");
     }
   }, [token])
 
@@ -210,7 +210,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
           <Input placeholder="Example 10" ref={amountInputRef} value={amount} onChange={handleAmount} disabled={!token} onKeyDown={handleEnter} />
         </Form.Item>
 
-        {poolStatus === "exist" && <Form.Item>
+        {poolStatus === "exists" && <Form.Item>
           <Checkbox checked={convert} onChange={(e) => setConvert(e.target.checked)}>Convert to GBYTE</Checkbox>
         </Form.Item>}
       </Form>

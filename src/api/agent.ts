@@ -26,7 +26,7 @@ type getRulesResult = [IRules, boolean];
 
 export class Agent {
   static getRules = async (fullName: string): Promise<getRulesResult> => {
-    let exist = true;
+    let exists = true;
     const var_prefix = `${fullName}*rules`;
 
     let rules = await client.api.getAaStateVars({
@@ -36,7 +36,7 @@ export class Agent {
 
     if (isEmpty(rules)) {
       rules = {};
-      exist = false;
+      exists = false;
     }
 
     rules = rules?.[var_prefix] as IRules;
@@ -55,7 +55,7 @@ export class Agent {
       }
     }
 
-    return [rules, exist]
+    return [rules, exists]
   }
 
   static getGithubUserByObyteAddress = async (address: string) => {

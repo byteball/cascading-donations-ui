@@ -10,7 +10,7 @@ import styles from "./Repository.module.css";
 
 const FULL_NAME_MAX_LENGTH = 20;
 const DESCRIPTION_MAX_LENGTH = 24;
-const COUNT_SHOW_ON_PAGE = 9;
+const COUNT_SHOWN_ON_PAGE = 9;
 
 export interface IRepositoryItem {
   full_name: string;
@@ -62,7 +62,7 @@ const RepositoryList: React.FC<IRepositoryList> = memo(({ data, prefixForKeys, .
     locale={{ emptyText: "No repositories" }}
     rowKey={(repository => `${prefixForKeys} - ${repository.full_name}`)}
     renderItem={repository => <RepositoryItem {...repository} />}
-    pagination={{ defaultPageSize: COUNT_SHOW_ON_PAGE, hideOnSinglePage: true }}
+    pagination={{ defaultPageSize: COUNT_SHOWN_ON_PAGE, hideOnSinglePage: true }}
     size="large"
     {...rest}
   />
