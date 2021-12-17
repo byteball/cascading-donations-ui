@@ -22,7 +22,7 @@ interface IDonateModal {
 
 type network = "Obyte" | "Ethereum" | "BSC" | "Polygon";
 
-type poolsStatus = "loading" | "exists" | "not-exists"
+type poolStatus = "loading" | "exists" | "not-exists"
 
 const f = (x: string) => (~(x + "").indexOf(".") ? (x + "").split(".")[1].length : 0);
 
@@ -32,7 +32,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
   const [convert, setConvert] = useState(true);
   const [network, setNetwork] = useState<network>("Obyte");
   const [maxAmount, setMaxAmount] = useState<number | undefined>();
-  const [poolStatus, setPoolStatus] = useState<poolsStatus>("loading")
+  const [poolStatus, setPoolStatus] = useState<poolStatus>("loading")
   const [donationProcessIsActive, setDonationProcessIsActive] = useState<boolean>(false);
   const [amount, setAmount] = useState<string | undefined>();
   const [token, setToken] = useState<IToken | undefined>({ asset: "base", symbol: "GBYTE", decimals: 9 });
