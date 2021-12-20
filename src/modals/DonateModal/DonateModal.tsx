@@ -161,7 +161,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
     if (token){
       ReactGA.event({
         category: "Donate",
-        action: `Donate in ${token.symbol} on ${token.network}`,
+        action: `${token.symbol}@${token.network}`,
         label: fullName
       })
     }

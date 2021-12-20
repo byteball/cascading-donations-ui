@@ -83,7 +83,7 @@ export const RepositoryPage: React.FC = () => {
 
     ReactGA.event({
       category: "Favorites",
-      action: `Add ${fullName} to favorites`
+      action: fullName
     })
   }
 

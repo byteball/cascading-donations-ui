@@ -37,7 +37,7 @@ export const MainSearch: React.FC = memo(() => {
   const handleSelect = (value: any) => {
     ReactGA.event({
       category: "Search",
-      action: `${value} selected from search`
+      action: value
     });
 
     navigate(`/repo/${value}`)
