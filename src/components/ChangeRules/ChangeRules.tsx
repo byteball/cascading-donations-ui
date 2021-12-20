@@ -4,6 +4,7 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { debounce, isArray, isNumber } from "lodash";
 import QRButton from "obyte-qr-button";
 import { useSelector } from "react-redux";
+import ReactGA from "react-ga";
 
 import { IRules, Agent } from "api/agent";
 import Github, { ISearchResultItem } from "api/github";
@@ -82,6 +83,14 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
   }
 
   const link = generateLink({ amount: 1e4, aa: config.aa_address, data: { set_rules: 1, repo: fullName, rules: resultRules }, from_address: walletAddress });
+
+  const sendSetRulesEventToGA = () => { 
+    ReactGA.event({
+      category: "Manage",
+      action: "Set rules",
+      label: fullName
+    })
+  }
 
   return <div>
     <p>
@@ -173,7 +182,7 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
         {percentSum > 100 && <Form.Item>
           <Alert type="error" message="The maximum cumulative percentage must not exceed 100" />
         </Form.Item>}
-        <QRButton type="primary" href={link} disabled={isError || (values.length !== 0 && percentSum > 100)}>
+        <QRButton type="primary" href={link} disabled={isError || (values.length !== 0 && percentSum > 100)} onClick={sendSetRulesEventToGA}>
           Save rules
         </QRButton>
       </Form.Item>

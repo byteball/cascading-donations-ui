@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Select, Spin, Form, Empty } from "antd";
 import QRButton from "obyte-qr-button";
 import { useSelector } from "react-redux";
+import ReactGA from "react-ga";
 
 import { selectWalletAddress } from "store/slices/settingsSlice";
 import { selectObyteTokens } from 'store/slices/tokensSlice';
@@ -57,6 +58,14 @@ export const Distribute: React.FC<IDistribute> = ({ fullName }) => {
   
   if (pools.status === "loaded" && pools.pools.length === 0) return <Empty description="No undistributed donations yet" />
 
+  const sendDistributeEventToGA = () => {
+    ReactGA.event({
+      category: "Manage",
+      action: "Distribute",
+      label: fullName
+    })
+  }
+
   return <div>
     <Form>
       <Form.Item>
@@ -74,6 +83,6 @@ export const Distribute: React.FC<IDistribute> = ({ fullName }) => {
       </div>
     </div>}
 
-    <QRButton size="large" type="primary" disabled={selectedPool === undefined || rules.rules.length === 0} href={link}>Distribute</QRButton>
+    <QRButton size="large" type="primary" disabled={selectedPool === undefined || rules.rules.length === 0} href={link} onClick={sendDistributeEventToGA}>Distribute</QRButton>
   </div>
 }

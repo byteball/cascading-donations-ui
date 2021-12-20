@@ -4,6 +4,7 @@ import QRButton from "obyte-qr-button";
 import { findBridge, findOswapPool, transferEVM2Obyte } from "counterstake-sdk";
 import { useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
+import ReactGA from "react-ga";
 
 import { getAvatarLink, generateLink, truncate } from "utils";
 import { selectTokensData } from "store/slices/tokensSlice";
@@ -35,7 +36,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
   const [poolStatus, setPoolStatus] = useState<poolStatus>("loading")
   const [donationProcessIsActive, setDonationProcessIsActive] = useState<boolean>(false);
   const [amount, setAmount] = useState<string | undefined>();
-  const [token, setToken] = useState<IToken | undefined>({ asset: "base", symbol: "GBYTE", decimals: 9 });
+  const [token, setToken] = useState<IToken | undefined>({ asset: "base", symbol: "GBYTE", decimals: 9, network: "Obyte" });
   const buttonRef = useRef<HTMLDivElement>(null);
   const amountInputRef = useRef<Input>(null);
   const tokens = useSelector(selectTokensData);
@@ -141,6 +142,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
       }
     }
 
+    sendDonationEventToGA();
     setDonationProcessIsActive(false);
   }
 
@@ -154,6 +156,16 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
   }
 
   const linkToDonate = token && network === "Obyte" ? generateLink({ amount: Math.ceil(Number(amount) * 10 ** token.decimals) + (token.asset === "base" ? 1e4 : 0), aa: config.aa_address, asset: token?.asset, data: { donate: 1, repo: fullName }, from_address: walletAddress }) : "";
+
+  const sendDonationEventToGA = () => {
+    if (token){
+      ReactGA.event({
+        category: "Donate",
+        action: `${token.symbol}@${token.network}`,
+        label: fullName
+      })
+    }
+  };
 
   return <>
     <Button type="primary" size="large" onClick={handleOpen}>
@@ -215,7 +227,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
         </Form.Item>}
       </Form>
       <div ref={buttonRef} className={styles.buttonWrap}>
-        {network === "Obyte" ? <QRButton href={linkToDonate} type="primary" disabled={!token || Number(amount) === 0 || amount === "." || typeof amount !== "string"}>Donate</QRButton> : <Button type="primary" loading={donationProcessIsActive || ((maxAmount === undefined) && !!token)} onClick={handleDonate} disabled={poolStatus === "loading" || Number(amount) === 0 || !token || amount === "." || typeof amount !== "string" || maxAmount === undefined || (Number(amount) > (maxAmount || 0))}>Donate</Button>}
+        {network === "Obyte" ? <QRButton href={linkToDonate} type="primary" disabled={!token || Number(amount) === 0 || amount === "." || typeof amount !== "string"} onClick={sendDonationEventToGA}>Donate</QRButton> : <Button type="primary" loading={donationProcessIsActive || ((maxAmount === undefined) && !!token)} onClick={handleDonate} disabled={poolStatus === "loading" || Number(amount) === 0 || !token || amount === "." || typeof amount !== "string" || maxAmount === undefined || (Number(amount) > (maxAmount || 0))}>Donate</Button>}
       </div>
 
       <div className={styles.warning}>

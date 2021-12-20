@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
 import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
+import ReactGA from "react-ga";
 
 import { MainMenu } from "components/MainMenu/MainMenu";
 import { getGithubUser } from "store/thunks/getGithubUser";
@@ -20,6 +21,10 @@ export const MainLayout: React.FC = ({ children }) => {
   const [activeMenu, setActiveMenu] = useState(false);
   const dispatch = useDispatch();
   const walletAddress = useSelector(selectWalletAddress);
+
+  useEffect(() => {
+    ReactGA.pageview(pathname)
+  }, [pathname]);
 
   useEffect(() => {
     dispatch(getGithubUser());

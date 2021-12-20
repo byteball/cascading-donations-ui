@@ -4,11 +4,17 @@ import "antd/dist/antd.less";
 import { HelmetProvider } from 'react-helmet-async';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Spin } from 'antd';
+import ReactGA from "react-ga";
 
 import './index.css';
 import { store, persistor } from './store';
 import * as serviceWorker from './serviceWorker';
 import { AppRouter } from 'AppRouter';
+import config from 'config';
+
+if (config.GA_id) {
+  ReactGA.initialize(config.GA_id);
+}
 
 ReactDOM.render(
   <Provider store={store}>

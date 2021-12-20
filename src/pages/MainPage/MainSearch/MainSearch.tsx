@@ -3,6 +3,7 @@ import { useState, memo } from "react";
 import { debounce } from "lodash";
 import { useNavigate } from 'react-router-dom';
 import { useWindowSize } from "usehooks-ts";
+import ReactGA from "react-ga";
 
 import github, { ISearchResultItem } from "api/github";
 import { ReactComponent as HowIllustration } from './how.svg';
@@ -34,6 +35,11 @@ export const MainSearch: React.FC = memo(() => {
   });
 
   const handleSelect = (value: any) => {
+    ReactGA.event({
+      category: "Search",
+      action: `search ${value}`
+    });
+
     navigate(`/repo/${value}`)
   };
 

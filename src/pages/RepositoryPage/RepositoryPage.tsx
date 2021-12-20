@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback, lazy, Suspense } from "react";
 import { useInterval } from 'usehooks-ts';
 import { useDispatch, useSelector } from "react-redux";
 import { Helmet } from 'react-helmet-async';
+import ReactGA from "react-ga";
 
 import { getAvatarLink, truncate } from "utils";
 import { IContributor, IRepoInfo } from 'store/slices/cacheSlice';
@@ -77,6 +78,15 @@ export const RepositoryPage: React.FC = () => {
 
   const avatarUrl = getAvatarLink(owner);
 
+  const addToFavorites = () => {
+    dispatch(addFavorite(fullName));
+
+    ReactGA.event({
+      category: "Favorites",
+      action: `fav ${fullName}`
+    })
+  }
+
   return <>
     <Helmet>
       <title>Kivach - {fullName}</title>
@@ -92,7 +102,7 @@ export const RepositoryPage: React.FC = () => {
 
         <Space size="large">
           {githubUser === owner && <SettingsModal fullName={fullName} />}
-          {isFavorite ? <StarFilled onClick={() => dispatch(removeFavorite(fullName))} style={{ fontSize: 24, color: "#f1c40f", cursor: "pointer" }} /> : <StarFilled style={{ fontSize: 24, color: "#ddd" }} onClick={() => dispatch(addFavorite(fullName))} />}
+          {isFavorite ? <StarFilled onClick={() => dispatch(removeFavorite(fullName))} style={{ fontSize: 24, color: "#f1c40f", cursor: "pointer" }} /> : <StarFilled style={{ fontSize: 24, color: "#ddd" }} onClick={addToFavorites} />}
           <DonateModal owner={owner} name={name} />
         </Space>
       </div>

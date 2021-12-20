@@ -5,5 +5,6 @@ export default {
   icon_cdn_url: process.env.REACT_APP_ICON_CDN_URL,
   backend_url: process.env.REACT_APP_BACKEND_URL,
   client_url: process.env.REACT_APP_CLIENT_URL,
-  pairing_url: process.env.REACT_APP_PAIRING_URL
+  pairing_url: process.env.REACT_APP_PAIRING_URL,
+  GA_id: process.env.REACT_APP_GA_ID
 }
