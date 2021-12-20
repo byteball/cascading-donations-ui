@@ -91,7 +91,6 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
     }
   }, [token])
 
-  console.log("token", token)
   // handles 
   const handleOpen = () => setVisible(true);
 
