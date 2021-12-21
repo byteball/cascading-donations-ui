@@ -1,4 +1,4 @@
-import { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo, createRef } from "react";
 import { useInterval, useWindowSize } from "usehooks-ts";
 import { Pie } from '@ant-design/charts';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +19,8 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
 
   const { width } = useWindowSize();
   const navigate = useNavigate();
+  const chartRef = createRef();
+  
   const updateRecipients = () => {
     Agent.getRules(fullName).then(([rules]) => setRecipients(Object.entries(rules).map(([repo, percent]) => ({ repo, percent }))));
   };
@@ -36,7 +38,6 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
   let actual = 0;
   if (recipients) {
     const config = {
-      // autoFit: true,
       appendPadding: 10,
       data: recipients.map((item: IParsedRule) => ({ ...item, color: "blue" })),
       angleField: 'percent',
@@ -105,7 +106,8 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
       },
       style: {
         userSelect: "none",
-        stroke: "#000"
+        stroke: "#000",
+        width: 800
       }
     }
 
@@ -115,7 +117,7 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
         <div style={{ maxWidth: 700 }}>The maintainer(s) of <b>{fullName} receive {howMuchGetMaintainer}% </b> of the donated funds. The rest is automatically forwarded to other repos that the maintainer(s) want to support:</div>
       </div>
       {/* @ts-ignore */}
-      {width > 800 ? <div style={{ width: 800, margin: "0 auto" }}><Pie {...config} legend={false} onReady={(plot) => {
+      {width > 800 ? <div style={{ width: 800, margin: "0 auto" }}><Pie {...config} legend={false} ref={chartRef} onReady={(plot) => {
         plot.on('element:click', (...args: any) => {
           if (args[0].data?.data) {
             const repo = args[0].data?.data?.repo;
