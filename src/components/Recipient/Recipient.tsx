@@ -36,7 +36,7 @@ interface IRecipientList {
 
 const RecipientList: React.FC<IRecipientList> = memo(({ data, prefixForKeys }) => {
   return <List
-    dataSource={data || []}
+    dataSource={data?.sort((a, b) => b.percent - a.percent) || []}
     grid={{
       column: 4,
       gutter: 0,

@@ -1,11 +1,11 @@
-import { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo, createRef } from "react";
 import { useInterval, useWindowSize } from "usehooks-ts";
 import { Pie } from '@ant-design/charts';
 import { useNavigate } from 'react-router-dom';
 
 import { Agent } from "api/agent";
 import { IParsedRule, RecipientList } from "components/Recipient/Recipient";
-import { getAvatarLink } from "utils";
+import { getAvatarLink, truncate } from "utils";
 
 interface IRecipients {
   fullName: string;
@@ -19,6 +19,8 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
 
   const { width } = useWindowSize();
   const navigate = useNavigate();
+  const chartRef = createRef();
+
   const updateRecipients = () => {
     Agent.getRules(fullName).then(([rules]) => setRecipients(Object.entries(rules).map(([repo, percent]) => ({ repo, percent }))));
   };
@@ -36,9 +38,8 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
   let actual = 0;
   if (recipients) {
     const config = {
-      // autoFit: true,
-      appendPadding: 10,
-      data: recipients.map((item: IParsedRule) => ({ ...item, color: "blue" })),
+      appendPadding: width >= 830 ? 10 : 0,
+      data: recipients.map((item: IParsedRule) => ({ ...item, color: "blue", repo: item.percent < 7 ? "" : item.repo })),
       angleField: 'percent',
       colorField: 'repo',
       pieStyle: (type: IParsedRule) => {
@@ -64,13 +65,21 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
           return color;
         }
       },
-      radius: 0.8,
+      radius: width >= 830 ? 0.8 : 1,
       key: `pie-${fullName}`,
       renderer: "svg",
       label: {
-        type: 'spider',
-        content: `{name}
-        {percentage}`
+        type: width >= 830 ? 'spider' : 'inner',
+        content: width >= 830 ? `{name}
+        {percentage}` : (item: any) => `${truncate(item.repo, 15)} 
+        ${item.repo ? (item.percent * 100).toFixed(0) + "%" : ""}`,
+        style: {
+          fontSize: width >= 600 ? 12 : 10,
+          textAlign: "center",
+          fill: "#2D2C2C",
+          background: "red",
+        },
+        autoRotate: false
       },
 
       tooltip: {
@@ -105,7 +114,9 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
       },
       style: {
         userSelect: "none",
-        stroke: "#000"
+        stroke: "#000",
+        width: width >= 830 ? 800 : width - 78,
+        height: width > 600 ? "auto" : 300
       }
     }
 
@@ -115,7 +126,7 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
         <div style={{ maxWidth: 700 }}>The maintainer(s) of <b>{fullName} receive {howMuchGetMaintainer}% </b> of the donated funds. The rest is automatically forwarded to other repos that the maintainer(s) want to support:</div>
       </div>
       {/* @ts-ignore */}
-      {width > 800 ? <div style={{ width: 800, margin: "0 auto" }}><Pie {...config} legend={false} onReady={(plot) => {
+      <div style={{ width: width >= 830 ? 800 : width - 78, margin: "0 auto", marginBottom: 40 }}><Pie {...config} legend={false} ref={chartRef} onReady={(plot) => {
         plot.on('element:click', (...args: any) => {
           if (args[0].data?.data) {
             const repo = args[0].data?.data?.repo;
@@ -127,7 +138,9 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
           }
         });
       }} />
-      </div> : <RecipientList
+      </div>
+
+      {width < 830 && <RecipientList
         data={recipients}
         prefixForKeys={"recipients-" + fullName}
       />}
