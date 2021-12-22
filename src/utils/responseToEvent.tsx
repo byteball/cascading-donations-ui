@@ -50,7 +50,7 @@ export const responseToEvent = (responses: IResponse[], tokens: IObyteTokens | u
         type = "distribution"
         repository = responseVars.message.split(" ")?.[3];
         const asset = responseVars.message.split(" ")?.[6];
-        message = `Distribution ${asset in tokens ? tokens[asset] : asset.slice(0, 5)} for ${repository}`;
+        message = `Distribution ${asset in tokens ? tokens[asset].symbol : asset.slice(0, 5)} for ${repository}`;
       }
     }
 
