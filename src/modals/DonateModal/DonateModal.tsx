@@ -35,7 +35,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
   const [maxAmount, setMaxAmount] = useState<number | undefined>();
   const [poolStatus, setPoolStatus] = useState<poolStatus>("loading")
   const [donationProcessIsActive, setDonationProcessIsActive] = useState<boolean>(false);
-  const [amount, setAmount] = useState<string | undefined>();
+  const [amount, setAmount] = useState<string>("");
   const [token, setToken] = useState<IToken | undefined>({ asset: "base", symbol: "GBYTE", decimals: 9, network: "Obyte" });
   const buttonRef = useRef<HTMLDivElement>(null);
   const amountInputRef = useRef<Input>(null);
