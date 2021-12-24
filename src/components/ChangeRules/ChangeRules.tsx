@@ -94,8 +94,10 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
 
   return <div>
     <p>
-      All the funds donated to your repo will be distributed between you and other repos you want to support. <br />
-      Please add <b>up to 10 other repos</b> you want to support and the percentages of the donated funds that will be forwarded to them.
+      All the funds donated to your repo will be distributed between you and other repos you want to support.
+    </p>
+    <p>
+      Please add <b>up to 10 other repos</b> you want to support and the percentages of the donated funds that will be forwarded to them. For example, you may want to add your most important dependencies (both direct and indirect) that made your work possible, platforms you use, developer tools, and the repos of your main contributors.
     </p>
     <Form validateTrigger={["onChange"]} size="large" preserve={false} onInvalid={() => setIsError(false)} autoComplete="off" onValuesChange={(_, values) => values.rules && setValues(values.rules)} onFieldsChange={(_, allFields) => {
       if (allFields.find(field => field.errors?.length || (field.name && typeof field.name === "object" && field.name.length === 1 && isArray(field.value) && field.value.findIndex((v) => !v?.repo || !v?.percent || !v) >= 0))) {

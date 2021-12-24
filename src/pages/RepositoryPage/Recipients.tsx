@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Agent } from "api/agent";
 import { IParsedRule, RecipientList } from "components/Recipient/Recipient";
 import { getAvatarLink, truncate } from "utils";
+import { Typography } from "antd";
 
 interface IRecipients {
   fullName: string;
@@ -122,7 +123,7 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
 
     return <div>
       <div style={{ marginBottom: 20 }}>
-        <div style={{ fontWeight: 600 }}>How the donated funds are distributed</div>
+        <Typography.Title level={4}>How the donated funds are distributed</Typography.Title>
         <div style={{ maxWidth: 700 }}>The maintainer(s) of <b>{fullName} receive {howMuchGetMaintainer}% </b> of the donated funds. The rest is automatically forwarded to other repos that the maintainer(s) want to support:</div>
       </div>
       {/* @ts-ignore */}

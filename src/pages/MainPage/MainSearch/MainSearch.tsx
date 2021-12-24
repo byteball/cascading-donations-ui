@@ -53,7 +53,7 @@ export const MainSearch: React.FC = memo(() => {
       <h1 className={styles.title}>Kivach</h1>
       <p className={styles.subTitle}>Cascading donations to github repositories</p>
       <Form>
-        <Form.Item extra={exhausted ? <span style={{ color: "red" }}>You have reached the limit of search queries, please try in a couple of minutes</span> : ""}>
+        <Form.Item extra={exhausted ? <span style={{ color: "red" }}>You have reached the limit of search queries, please try again in a couple of minutes</span> : ""}>
           <Select
             size="large"
             className={styles.select}
@@ -62,7 +62,7 @@ export const MainSearch: React.FC = memo(() => {
             defaultActiveFirstOption={false}
             notFoundContent={null}
             showSearch
-            placeholder="Search repo, example: byteball/ocore"
+            placeholder="Repo name, e.g. bitcoin/bitcoin"
             onSelect={handleSelect}
             onSearch={debounce(handleSearch, 800)}
             loading={true}
@@ -71,6 +71,7 @@ export const MainSearch: React.FC = memo(() => {
           </Select>
         </Form.Item>
       </Form>
+      <p>Support open-source projects with donations in crypto, and they will automatically forward a part of your donation to other open-source projects that made them possible.</p>
     </Col>
     {width >= 992 && <Col xs={24} sm={24} md={12}>
       <HowIllustration />

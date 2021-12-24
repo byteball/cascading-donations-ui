@@ -42,8 +42,8 @@ export const AddPage: React.FC = () => {
     </Helmet>
     <Steps current={step} style={{ marginBottom: 30 }}>
       <Step title={stepTitles[0]} description="Adding your Obyte wallet" />
-      <Step title={stepTitles[1]} description="Obtaining attestation of a github account" />
-      <Step title={stepTitles[2]} description="Setting distribution rules and generating banner code" />
+      <Step title={stepTitles[1]} description="Attestation of your github account" />
+      <Step title={stepTitles[2]} description="Distribution rules and banner code" />
     </Steps>
     {StepComponent}
   </div>

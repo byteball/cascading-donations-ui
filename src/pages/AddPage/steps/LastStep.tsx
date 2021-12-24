@@ -104,7 +104,7 @@ export const LastStep = () => {
 
 
                 {bannerCode && <Form.Item>
-                  <CopyToClipboard text={bannerCode} onCopy={() => message.success("The banner has been copied to the clipboard")}>
+                  <CopyToClipboard text={bannerCode} onCopy={() => message.success("The banner code has been copied to the clipboard")}>
                     <Button size="small" type="dashed" block><CopyOutlined/> Copy</Button>
                   </CopyToClipboard>
                 </Form.Item>}

@@ -65,12 +65,12 @@ export const MyReposPage = () => {
 
     <Form size="large" layout="inline" style={{ marginBottom: 15 }}>
       <Form.Item style={{ flex: 1 }}>
-        <Input placeholder="Search repo..." style={{ marginBottom: 5 }} onChange={(ev) => setSearchQuery(ev.target.value)} />
+        <Input placeholder="Filter by repo name" style={{ marginBottom: 5 }} onChange={(ev) => setSearchQuery(ev.target.value)} />
         {filters.haveDonations !== "all" && <Tag closable onClose={() => dispatch(removeFilter({ type: "haveDonations" }))}>
           Donations: {filters.haveDonations ? "YES" : "NO"}
         </Tag>}
         {filters.areSetRules !== "all" && <Tag closable onClose={() => dispatch(removeFilter({ type: "areSetRules" }))}>
-          Is set rules: {filters.areSetRules ? "YES" : "NO"}
+          Rules are set: {filters.areSetRules ? "YES" : "NO"}
         </Tag>}
 
         {tokens && filters?.tokens?.map((asset: string) => (<Tag closable key={`tag-${asset}`} onClose={() => dispatch(removeFilter({ type: "tokens", value: asset }))}>

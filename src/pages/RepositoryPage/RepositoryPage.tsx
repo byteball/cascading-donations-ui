@@ -96,7 +96,7 @@ export const RepositoryPage: React.FC = () => {
         <div className={styles.header}>
           <Avatar src={avatarUrl} size={70} className={styles.avatar} />
           <Typography.Title level={1} className={styles.title}>
-            <a href={`https://github.com/${fullName}`} target="_blank" rel="noopener">{truncate(fullName, 25)}</a> {isFullSetup && <Tooltip title="Fully setup. Maintainer added banner to README.md file."><CheckCircleOutlined style={{ color: "#0037ff", marginLeft: 5, height: "auto" }} /></Tooltip>}
+            <a href={`https://github.com/${fullName}`} target="_blank" rel="noopener">{truncate(fullName, 25)}</a> {isFullSetup && <Tooltip title="Fully setup. Maintainer has added a banner to their README."><CheckCircleOutlined style={{ color: "#0037ff", marginLeft: 5, height: "auto" }} /></Tooltip>}
           </Typography.Title>
         </div>
 
