@@ -1,12 +1,10 @@
 import config from "config"
 
 export const AttestationStep: React.FC = () => (<div>
-  <p>To link your wallet with a github user, you need to pass attestation.</p>
-  <div><b>It is very easy to do this:</b></div>
-  <ol>
-    <li style={{ padding: 5 }}><a href={config.pairing_url}>Pair with GitHub attestation bot</a></li>
-    <li style={{ padding: 5 }}>Authenticate with GitHub from chat bot</li>
-    <li style={{ padding: 5 }}>Sign a message to verify Obyte wallet address</li>
-  </ol>
-  <div><i>After successful attestation, you will automatically proceed to the next step</i></div>
+  <p>To link your wallet with your github account, you need to get an attestation.</p>
+
+  <p>Please <a href={config.pairing_url}>pair with the GitHub attestation bot</a> in your Obyte wallet and follow its instructions. The bot will ask you to authenticate with your github account and sign a message with your Obyte address. Choose <i>public</i> attestation when asked by the bot. Then, the bot will post an attestation transaction.</p>
+
+  <p>After successful attestation, you will automatically proceed to the next step.</p>
+
 </div>)
