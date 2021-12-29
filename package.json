@@ -69,5 +69,8 @@
   },
   "devDependencies": {
     "source-map-explorer": "^2.5.2"
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   }
 }

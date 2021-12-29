@@ -1,6 +1,5 @@
 import { store } from "store"
 import { Octokit } from "@octokit/rest";
-import { isEmpty } from "lodash";
 
 import { backendAPI } from 'api/backend';
 import { updateCacheItem } from "store/actions/updateCacheItem";
@@ -108,41 +107,40 @@ class Github {
     }
   }
 
-  getReposListByUser = async (owner: string) => {
+  getReposListByUser = async (owner: string, query?: string) => {
     const state = store.getState();
     const allCache = state.cache.reposList.data;
     const item = allCache[owner];
 
     if ((!item || (item && ((item.update_at + 60 * 60 * 1) < (Date.now() / 1000))))) {
       let repos: ISearchResultItem[] = [];
-      let page = 1;
-      console.log("no cache")
-      try {
-        while (owner) {
-          const list = await this.github.rest.repos.listForUser({
-            username: owner,
-            per_page: 100,
-            page: page
-          }).then(data => data?.data);
 
-          if (isEmpty(list) && list.length < 100) {
-            break;
-          } else {
-            const newData = list.map((i) => ({
-              title: String(i.full_name).toLowerCase(),
-              description: i.description
-            }))
-            repos = [...repos, ...newData];
-            page++;
-          }
-        }
+      try {
+        const list = await this.github.rest.repos.listForUser({
+          username: owner,
+          per_page: 100,
+          page: 1
+        }).then(data => data?.data);
+
+        const repos = list.map((i) => ({
+          title: String(i.full_name).toLowerCase(),
+          description: i.description
+        }))
+
         store.dispatch(updateCacheItem({
           data: repos,
           identifier: owner,
           type: "reposList"
         }))
 
-        return repos;
+        if (repos.length >= 100 && query) {
+          return await this.searchRepos(`${owner}/${query}`);
+        } else if (query) {
+          return repos.filter((repo) => repo.title.split("/")[1].includes(query));
+        } else {
+          return repos;
+        }
+
       } catch (e: any) {
         if (e && e.message && e.message === "Not Found") {
           store.dispatch(updateCacheItem({
@@ -155,14 +153,22 @@ class Github {
       }
     } else {
       console.log("cache")
-      return item.data
+      const repos = item.data;
+
+      if (query && repos.length >= 100) {
+        return await this.searchRepos(`${owner}/${query}`);
+      } else if (query) {
+        return repos.filter((repo) => repo.title.split("/")[1].includes(query));
+      } else {
+        return repos;
+      }
     }
   }
 
 
   searchRepos = async (query: string): Promise<ISearchResultItem[]> => {
     const [owner, name] = query.split("/");
-    let q = query;
+    let q = `${query} fork:true`;
     let result: ISearchResultItem[] = [];
 
     if (this.limitErrorTime && ((this.limitErrorTime + 60) > (Date.now() / 1000))) {
@@ -170,13 +176,13 @@ class Github {
     } else {
       try {
         if (owner && name) {
-          q = `user:${owner} ${name}`
+          q = `user:${owner} ${name} fork:true`;
         }
 
         result = await this.github.request('GET /search/repositories', {
           q,
         }).then((result) => result.data.items.map((item) => ({ title: item.full_name, description: item.description })));
-        
+
         this.limitErrorTime = null;
       } catch {
         this.limitErrorTime = Date.now() / 1000;

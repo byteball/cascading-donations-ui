@@ -31,8 +31,8 @@ export const responseToEvent = (responses: IResponse[], tokens: IObyteTokens | u
       if (responseVars.message.includes("Rules for ")) {
         type = "set_rules"
         repository = responseVars.message.split(" ")?.[2];
-        const newRules = JSON.parse(responseVars.new_rules) as IRules;
-        message = <span>Rules for <Link to={`/repo/${repository}`}>{repository}</Link> have been changed to {Object.entries(newRules).map(([fullName, percent]) => `${fullName} ${percent}%`).join("; ")};</span>
+        const newRules = responseVars.new_rules && JSON.parse(responseVars.new_rules) as IRules;
+        message = <span>Rules for <Link to={`/repo/${repository}`}>{repository}</Link> have been changed to {(newRules && Object.keys(newRules).length > 0) ? Object.entries(newRules).map(([fullName, percent]) => `${fullName} ${percent}%`).join("; ") : `${repository} 100%`};</span>
       } else if (responseVars.message.includes("Successful donation to ")) {
         type = "donate"
         repository = responseVars.message.split(" ")?.[3];
@@ -40,8 +40,9 @@ export const responseToEvent = (responses: IResponse[], tokens: IObyteTokens | u
 
         if (donatedVarName) {
           const asset = donatedVarName.split("_")?.[2];
+          const amount = responseVars[donatedVarName];
           const donor = responseVars?.donor || trigger_address;
-          message = <span><a target="_blank" href={`https://${config.testnet ? "testnet" : ""}explorer.obyte.org/#${donor}`}>{donor.slice(0, 10)}...</a> donated {asset in tokens ? tokens[asset].symbol : asset.slice(0, 5)} to <Link to={`/repo/${repository}`}>{repository}</Link></span>
+          message = <span><a target="_blank" rel="noopener" href={`https://${config.testnet ? "testnet" : ""}explorer.obyte.org/#${donor}`}>{donor.slice(0, 10)}...</a> donated {amount / (10 ** ((asset in tokens) ? (tokens[asset].decimals || 0) : 0))} {asset in tokens ? tokens[asset].symbol : asset.slice(0, 5)} to <Link to={`/repo/${repository}`}>{repository}</Link></span>
         } else {
           return null;
         }

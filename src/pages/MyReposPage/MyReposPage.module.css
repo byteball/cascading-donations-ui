@@ -1,28 +1,7 @@
-.headerWrap {
-  display: flex;
-  align-items: center;
-  margin-bottom: 50px;
-}
-
-.headerInfo {
-  margin-left: 10px;
-}
-
-.githubName {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.wallet {
-  color: #333;
-  font-size: 12px;
-}
-
 .item {
   display: flex;
   margin-bottom: 45px;
   justify-content: space-between;
-  /* align-items: center; */
 }
 
 .repoName {

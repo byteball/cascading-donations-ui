@@ -10,7 +10,7 @@ import ReactGA from "react-ga";
 import { getAvatarLink, truncate } from "utils";
 import { IContributor, IRepoInfo } from 'store/slices/cacheSlice';
 import { ContributorList } from "components/Contributor/Contributor";
-import { addFavorite, removeFavorite, selectFavorites, selectGithubUser } from "store/slices/settingsSlice";
+import { addFavorite, removeFavorite, selectFavorites, selectGithubUsers } from "store/slices/settingsSlice";
 import { selectEvents } from "store/slices/responsesSlice";
 import { EventList } from "components/Event/Event";
 import { IEvent } from 'utils/responseToEvent';
@@ -43,7 +43,7 @@ export const RepositoryPage: React.FC = () => {
   const dispatch = useDispatch();
   const favorites = useSelector(selectFavorites);
   const recentEvents = useSelector(selectEvents);
-  const githubUser = useSelector(selectGithubUser);
+  const githubUsers = useSelector(selectGithubUsers);
 
   const getBasicInformation = useCallback(async () => await Github.getBasicInformation(owner + "/" + name).then(data => setBasicInfo(data)), [owner, name]);
   const getContributors = useCallback(async () => await Github.getContributors(owner + "/" + name).then(data => setContributors(data)), [owner, name]);
@@ -101,7 +101,7 @@ export const RepositoryPage: React.FC = () => {
         </div>
 
         <Space size="large">
-          {githubUser === owner && <SettingsModal fullName={fullName} />}
+          {githubUsers.includes(owner) && <SettingsModal fullName={fullName} />}
           {isFavorite ? <StarFilled onClick={() => dispatch(removeFavorite(fullName))} style={{ fontSize: 24, color: "#f1c40f", cursor: "pointer" }} /> : <StarFilled style={{ fontSize: 24, color: "#ddd" }} onClick={addToFavorites} />}
           <DonateModal owner={owner} name={name} />
         </Space>

@@ -1,20 +1,22 @@
-import { Avatar, Typography, Button, Form, Input, Tag, Spin } from "antd";
+import { Typography, Button, Form, Input, Tag, Spin } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useInterval } from 'usehooks-ts';
 import { useSelector, useDispatch } from 'react-redux';
+import { SearchOutlined } from "@ant-design/icons";
+import { debounce } from 'lodash';
 
 import { ISearchResultItem } from 'api/github';
-import { removeFilter, selectFilters, selectGithubUser, selectWalletAddress } from "store/slices/settingsSlice";
+import { removeFilter, selectActiveGithubUser, selectFilters } from "store/slices/settingsSlice";
 import { RepositoryFiltersModal } from "modals/RepositoryFiltersModal/RepositoryFiltersModal";
 import { Agent, IPool } from 'api/agent';
 import { selectObyteTokens } from "store/slices/tokensSlice";
 import { truncate } from 'utils/truncate';
 import { SettingsModal } from "modals";
+import { GithubUserSwitch } from "components/GithubUserSwitch/GithubUserSwitch";
 
 import styles from "./MyReposPage.module.css";
-
 interface ISearchResultItemWithData extends ISearchResultItem {
   rulesAreSet: boolean;
   pools: IPool[];
@@ -24,30 +26,53 @@ export const MyReposPage = () => {
   const [repoList, setRepoList] = useState<ISearchResultItemWithData[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-
+  const [exhausted, setExhausted] = useState<boolean>(false);
+  const inputRef = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const githubUser = useSelector(selectGithubUser);
-  const currentWalletAddress = useSelector(selectWalletAddress);
+  const activeGithubUser = useSelector(selectActiveGithubUser);
   const filters = useSelector(selectFilters);
   const tokens = useSelector(selectObyteTokens);
 
-  const getManagementList = useCallback(() => githubUser && Agent.getManagementList(githubUser).then(data => { setRepoList(data); setLoading(false) }), [githubUser]);
+  const getManagementList = useCallback(() => activeGithubUser && Agent.getManagementList(activeGithubUser).then(data => {
+    setRepoList(data);
+    setLoading(false);
+    setSearchQuery("");
 
-  useInterval(getManagementList, 10 * 60 * 1000)
+    if (inputRef.current) {
+      // @ts-ignore
+      inputRef.current.input.value = "";
+      // @ts-ignore
+      inputRef.current.state.value = "";
+    }
+  }), [activeGithubUser]);
 
   useEffect(() => {
     setLoading(true);
     getManagementList();
   }, [getManagementList])
 
-  const searchResults = searchQuery !== "" ? repoList.filter((repo) => repo.title.split("/")[1].includes(searchQuery)) : repoList;
+  useInterval(() => activeGithubUser && Agent.getManagementList(activeGithubUser, searchQuery).then(data => { setRepoList(data); setLoading(false) }), 10 * 60 * 1000);
 
-  const resultList = searchResults.filter(repo => (filters.haveDonations !== "all" ? (filters.haveDonations ? repo.pools && repo.pools.length > 0 : !repo.pools) : true) && (filters.areSetRules !== "all" ? repo.rulesAreSet === filters.areSetRules : true) && (filters.tokens.length > 0 ? ((!repo.pools || repo.pools.length === 0) ? false : repo.pools.find((pool) => filters.tokens.includes(pool.asset))) : true)).sort((a, b) => (b.pools?.length || 0) - (a.pools?.length || 0));
+  if (!activeGithubUser) {
+    navigate("/add");
+    return null;
+  }
 
-  if (!githubUser) {
-    navigate("/add")
+  const resultList = repoList.filter(repo => (filters.haveDonations !== "all" ? (filters.haveDonations ? repo.pools && repo.pools.length > 0 : !repo.pools) : true) && (filters.areSetRules !== "all" ? repo.rulesAreSet === filters.areSetRules : true) && (filters.tokens.length > 0 ? ((!repo.pools || repo.pools.length === 0) ? false : repo.pools.find((pool) => filters.tokens.includes(pool.asset))) : true)).sort((a, b) => (b.pools?.length || 0) - (a.pools?.length || 0));
+
+  const handleSearch = async (ev: React.ChangeEvent<HTMLInputElement>) => {
+
+    const query = ev.target.value;
+    setLoading(true);
+    setSearchQuery(query);
+    Agent.getManagementList(activeGithubUser, query).then(data => { setRepoList(data); setLoading(false) }).catch(() => setExhausted(true))
+    setLoading(false);
+
+    if (exhausted) {
+      setExhausted(false)
+    }
   }
 
   return <div>
@@ -55,17 +80,12 @@ export const MyReposPage = () => {
       <title>Kivach - My repositories</title>
     </Helmet>
     <Typography.Title>My repositories</Typography.Title>
-    <div className={styles.headerWrap}>
-      <Avatar className={styles.avatar} size={40} src={`https://avatars.githubusercontent.com/${githubUser}`} alt="" />
-      <div className={styles.headerInfo}>
-        <div className={styles.githubName}>{githubUser}</div>
-        <div className={styles.wallet}>{currentWalletAddress}</div>
-      </div>
-    </div>
+
+    <GithubUserSwitch />
 
     <Form size="large" layout="inline" style={{ marginBottom: 15 }}>
-      <Form.Item style={{ flex: 1 }}>
-        <Input placeholder="Filter by repo name" style={{ marginBottom: 5 }} onChange={(ev) => setSearchQuery(ev.target.value)} />
+      <Form.Item style={{ flex: 1 }} extra={exhausted ? <span style={{ color: "red" }}>You have reached the limit of search queries, please try again in a couple of minutes</span> : ""}>
+        <Input allowClear ref={inputRef} placeholder="Filter by repo name/description" prefix={<SearchOutlined style={{ color: "#D9D9D9" }} />} style={{ marginBottom: 5 }} onChange={debounce(handleSearch, 800)} />
         {filters.haveDonations !== "all" && <Tag closable onClose={() => dispatch(removeFilter({ type: "haveDonations" }))}>
           Donations: {filters.haveDonations ? "YES" : "NO"}
         </Tag>}
@@ -77,7 +97,7 @@ export const MyReposPage = () => {
           {tokens[asset].symbol}
         </Tag>))}
       </Form.Item>
-      <Form.Item>
+      <Form.Item style={{ marginRight: 0 }}>
         <RepositoryFiltersModal />
       </Form.Item>
     </Form>
@@ -87,7 +107,6 @@ export const MyReposPage = () => {
         <div className={styles.repoInfo}>
           <div><Link className={styles.repoName} to={`/repo/${fullName}`}>{fullName.split("/")?.[1]}</Link></div>
           <div className={styles.desc}>{description || "No description"}</div>
-          {/* <div className={styles.desc}>{(pools && pools.length > 0) ? `Pending distribute: ${pools?.map((pool) => (tokens && tokens[pool.asset]?.symbol) || truncate(pool.asset, 7)).join(", ")}` : "No assets pending distribution"}</div> */}
         </div>
         {pools && pools.length > 0 && <div className={styles.pools}>
           {pools.sort((a, b) => (b.amount / (10 ** ((tokens && tokens[b.asset]?.decimals) || 0))) - (a.amount / (10 ** ((tokens && tokens[a.asset]?.decimals) || 0)))).slice(0, 3).map(({ asset, amount }) => <div key={asset}>{+Number(amount / (10 ** ((tokens && tokens[asset]?.decimals) || 0))).toFixed(8)} <small>{(tokens && tokens[asset]?.symbol) || truncate(asset, 7)}</small></div>)}

@@ -1,16 +1,26 @@
+import { DownOutlined } from "@ant-design/icons";
 import { Collapse, Typography } from "antd"
 import { Helmet } from 'react-helmet-async';
 import { Link } from "react-router-dom";
 
+import styles from "./FaqPage.module.css";
+
 const { Panel } = Collapse;
 
 export const FaqPage: React.FC = () => (
-  <div>
+  <div className="faq">
     <Helmet>
       <title>Kivach - F.A.Q.</title>
     </Helmet>
     <Typography.Title>F.A.Q.</Typography.Title>
-    <Collapse ghost accordion>
+    <Collapse
+      ghost
+      accordion
+      className={styles.collapse}
+      expandIconPosition="right" expandIcon={({ isActive }) => (
+        <DownOutlined rotate={isActive ? 180 : 0} className={styles.icon} />
+      )}
+    >
       <Panel header="What coins are accepted for donations?" key="10">
         <p>All Obyte tokens and tokens on other chains (Ehereum, BSC, Polygon) that are exportable to Obyte through <a href="https://counterstake.org" target="_blank" rel="noopener">Counterstake Bridge</a>. This includes many popular tokens such as USDC, ETH, WBTC, BNB, etc.</p>
       </Panel>

@@ -4,6 +4,7 @@ import { debounce } from "lodash";
 import { useNavigate } from 'react-router-dom';
 import { useWindowSize } from "usehooks-ts";
 import ReactGA from "react-ga";
+import { SearchOutlined } from "@ant-design/icons";
 
 import github, { ISearchResultItem } from "api/github";
 import { ReactComponent as HowIllustration } from './how.svg';
@@ -18,7 +19,7 @@ export const MainSearch: React.FC = memo(() => {
   const { width } = useWindowSize();
 
   // handlers
-  const handleSearch = debounce(async (value: any) => {
+  const handleSearch = async (value: any) => {
     try {
       if (value) {
         const result = await github.searchRepos(value);
@@ -32,7 +33,7 @@ export const MainSearch: React.FC = memo(() => {
     } catch {
       setExhausted(true)
     }
-  });
+  };
 
   const handleSelect = (value: any) => {
     ReactGA.event({
@@ -57,21 +58,21 @@ export const MainSearch: React.FC = memo(() => {
           <Select
             size="large"
             className={styles.select}
-            showArrow={false}
             filterOption={false}
             defaultActiveFirstOption={false}
             notFoundContent={null}
             showSearch
-            placeholder="Repo name, e.g. bitcoin/bitcoin"
+            placeholder="&nbsp;&nbsp;&nbsp;&nbsp; Repo name, e.g. bitcoin/bitcoin"
             onSelect={handleSelect}
             onSearch={debounce(handleSearch, 800)}
             loading={true}
+            suffixIcon={<SearchOutlined style={{ fontSize: 16 }} />}
           >
             {options}
           </Select>
         </Form.Item>
       </Form>
-      <p>Support open-source projects with donations in crypto, and they will automatically forward a part of your donation to other open-source projects that made them possible.</p>
+      <p className={styles.description}>Support open-source projects with donations in crypto, and they will automatically forward a part of your donation to other open-source projects that made them possible.</p>
     </Col>
     {width >= 992 && <Col xs={24} sm={24} md={12}>
       <HowIllustration />

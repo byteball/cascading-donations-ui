@@ -83,7 +83,7 @@ export const MainLayout: React.FC = ({ children }) => {
       </Content>
       <Footer style={{ textAlign: "center" }}>
         <div style={{ fontWeight: 300, fontSize: 12 }}>All information about repositories belongs to their owners</div>
-        &copy; Obyte
+        &copy; <a target="_blank" rel="noopener" href="https://obyte.org" className={styles.footerLink}>Obyte</a>
       </Footer>
     </Layout>
   )

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Select, Spin, Form, Empty } from "antd";
+import { Select, Spin, Form, Empty, Result } from "antd";
 import QRButton from "obyte-qr-button";
 import { useSelector } from "react-redux";
 import ReactGA from "react-ga";
@@ -21,19 +21,20 @@ interface IParsedRule {
 }
 
 interface ILoadedRules {
-  rules: IParsedRule[],
-  status: "loading" | "loaded"
+  rules: IParsedRule[];
+  status: "loading" | "loaded";
+  exists: boolean;
 }
 
 interface ILoadedPools {
-  pools: IPool[],
-  status: "loading" | "loaded"
+  pools: IPool[];
+  status: "loading" | "loaded";
 }
 
 export const Distribute: React.FC<IDistribute> = ({ fullName }) => {
   const [pools, setPools] = useState<ILoadedPools>({ pools: [], status: "loading" });
   const [selectedPool, setSelectedPool] = useState<IPool | undefined>(undefined);
-  const [rules, setRules] = useState<ILoadedRules>({ rules: [], status: "loading" });
+  const [rules, setRules] = useState<ILoadedRules>({ rules: [], status: "loading", exists: false });
 
   const tokens = useSelector(selectObyteTokens);
   const walletAddress = useSelector(selectWalletAddress);
@@ -41,8 +42,8 @@ export const Distribute: React.FC<IDistribute> = ({ fullName }) => {
   const getPools = () => Agent.getPoolsByFullName(fullName).then((pools) => setPools({ pools, status: "loaded" }));
 
   const getRules = async () => {
-    setRules({ rules: [], status: "loading" })
-    await Agent.getRules(fullName).then(([rules]) => setRules({ status: "loaded", rules: Object.entries(rules).map(([repo, percent]) => ({ repo, percent })) })); 
+    setRules({ rules: [], status: "loading", exists: false });
+    await Agent.getRules(fullName).then(([rules, exists]) => setRules({ status: "loaded", rules: Object.entries(rules).map(([repo, percent]) => ({ repo, percent })), exists }));
   }
 
   useEffect(() => {
@@ -55,7 +56,14 @@ export const Distribute: React.FC<IDistribute> = ({ fullName }) => {
   const selectedPoolAssetInfo = tokens && selectedPool ? tokens[selectedPool.asset] : null;
 
   if (pools.status === "loading" || rules.status === "loading") return <div style={{ width: "100%", display: "flex", justifyContent: "center", paddingTop: "20px" }}><Spin size="large" /></div>
-  
+
+  if (!rules.exists) {
+    return <Result
+      status="warning"
+      subTitle="Please set up the distribution rules first"
+    />
+  }
+
   if (pools.status === "loaded" && pools.pools.length === 0) return <Empty description="No undistributed donations yet" />
 
   const sendDistributeEventToGA = () => {
@@ -83,6 +91,6 @@ export const Distribute: React.FC<IDistribute> = ({ fullName }) => {
       </div>
     </div>}
 
-    <QRButton size="large" type="primary" disabled={selectedPool === undefined || rules.rules.length === 0} href={link} onClick={sendDistributeEventToGA}>Distribute</QRButton>
+    <QRButton size="large" type="primary" disabled={selectedPool === undefined || rules.rules.length === 0 || !selectedPool.amount} href={link} onClick={sendDistributeEventToGA}>Distribute</QRButton>
   </div>
 }

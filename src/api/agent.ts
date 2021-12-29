@@ -58,15 +58,28 @@ export class Agent {
     return [rules, exists]
   }
 
-  static getGithubUserByObyteAddress = async (address: string) => {
+  static getGithubUsersByObyteAddress = async (address: string) => {
     try {
       const attestations = await getAttestations(address);
-      const profile: any = attestations.find((a) => a.attestor_address === config.aa_attestor && a?.profile)?.profile;
-      if (profile && profile?.github_username) {
-        return profile.github_username as string;
-      } else {
-        return null
-      }
+      const githubNames: string[] = [];
+
+      attestations.forEach((a: any) => {
+        if (a.attestor_address === config.aa_attestor && a?.profile && a.profile.github_username) {
+          if (!githubNames.includes(a.profile.github_username)) {
+            githubNames.push(a.profile.github_username);
+          }
+        }
+      });
+
+      const getters = githubNames.map((user) => client.api.getAaStateVars({
+        address: config.aa_attestor_forward,
+        var_prefix: `u2a_${user}`
+      }).then((data: any) => ({ user, adr: data?.[`u2a_${user}`] })) as IStateVars);
+
+      const users = await Promise.all(getters);
+
+      return users.filter(({ adr }) => (address === adr) && typeof adr === 'string').map((item) => item.user) as string[];
+
     } catch {
       return null
     }
@@ -89,7 +102,7 @@ export class Agent {
     return pools
   }
 
-  static getManagementList = async (owner: string) => {
+  static getManagementList = async (owner: string, query?: string) => {
     const stateVars = await client.api.getAaStateVars({
       address: config.aa_address,
       var_prefix: owner
@@ -115,9 +128,7 @@ export class Agent {
       }
     })
 
-
-
-    const listByGithubName = await github.getReposListByUser(owner).then((repos) => repos.map((repo) => {
+    const listByGithubName = await github.getReposListByUser(owner, query).then((repos) => repos.map((repo) => {
       return ({ ...repo, rulesAreSet: `${repo.title}*rules` in stateVars, pools: poolsByRepo[repo.title] })
     }));
 

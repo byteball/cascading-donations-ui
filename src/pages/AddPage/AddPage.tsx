@@ -2,7 +2,7 @@ import { Steps } from "antd";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 
-import { selectGithubUser, selectWalletAddress } from "store/slices/settingsSlice";
+import { selectGithubUsers, selectWalletAddress } from "store/slices/settingsSlice";
 import { AttestationStep, WalletStep, LastStep } from "./steps";
 
 const { Step } = Steps;
@@ -10,10 +10,10 @@ const { Step } = Steps;
 export const AddPage: React.FC = () => {
   let step;
   const walletAddress = useSelector(selectWalletAddress);
-  const githubUser = useSelector(selectGithubUser);
+  const githubUsers = useSelector(selectGithubUsers);
 
   if (walletAddress) {
-    if (githubUser) {
+    if (githubUsers.length > 0) {
       step = 2;
     } else {
       step = 1;

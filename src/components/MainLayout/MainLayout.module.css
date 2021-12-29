@@ -32,3 +32,7 @@
   display: flex;
   align-items: center;
 }
+
+.footerLink{
+  color: #333333;
+}

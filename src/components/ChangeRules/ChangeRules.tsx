@@ -1,7 +1,7 @@
 import { useState, useEffect, memo } from "react"
 import { Spin, Form, Input, Button, Select, Alert } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { debounce, isArray, isNumber } from "lodash";
+import { debounce, isArray, isEmpty, isNumber } from "lodash";
 import QRButton from "obyte-qr-button";
 import { useSelector } from "react-redux";
 import ReactGA from "react-ga";
@@ -26,6 +26,7 @@ interface IValue {
 
 export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, fullName }) => {
   const [initialRules, setInitialRules] = useState<IRules>();
+  const [exhausted, setExhausted] = useState<boolean>(false);
   const [values, setValues] = useState<IValues>([]);
   const [isError, setIsError] = useState(false);
   const [data, setData] = useState<ISearchResultItem[]>([]);
@@ -61,8 +62,14 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
   const handleSearch = async (value: any) => {
     if (value && value.includes("/")) {
       const [owner, name] = value.split("/");
-      const result = await Github.getReposListByUser(owner);
-      setData(name ? result.filter((repo) => repo.title.includes(value)) : result);
+      try {
+        const result = await Github.getReposListByUser(owner, name);
+        setData(name ? result.filter((repo) => repo.title.includes(value)) : result);
+        setExhausted(false);
+      } catch {
+        setExhausted(true);
+        setData([]);
+      }
     } else {
       setData([]);
     }
@@ -82,9 +89,9 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
     })
   }
 
-  const link = generateLink({ amount: 1e4, aa: config.aa_address, data: { set_rules: 1, repo: fullName, rules: resultRules }, from_address: walletAddress });
+  const link = generateLink({ amount: 1e4, aa: config.aa_address, data: { set_rules: 1, repo: fullName, rules: !isEmpty(resultRules) ? resultRules : false }, from_address: walletAddress });
 
-  const sendSetRulesEventToGA = () => { 
+  const sendSetRulesEventToGA = () => {
     ReactGA.event({
       category: "Manage",
       action: "Set rules",
@@ -99,6 +106,7 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
     <p>
       Please add <b>up to 10 other repos</b> you want to support and the percentages of the donated funds that will be forwarded to them. For example, you may want to add your most important dependencies (both direct and indirect) that made your work possible, platforms you use, developer tools, and the repos of your main contributors.
     </p>
+    {exhausted ? <p><span style={{ color: "red" }}>You have reached the limit of search queries, please try again in a couple of minutes</span></p> : ""}
     <Form validateTrigger={["onChange"]} size="large" preserve={false} onInvalid={() => setIsError(false)} autoComplete="off" onValuesChange={(_, values) => values.rules && setValues(values.rules)} onFieldsChange={(_, allFields) => {
       if (allFields.find(field => field.errors?.length || (field.name && typeof field.name === "object" && field.name.length === 1 && isArray(field.value) && field.value.findIndex((v) => !v?.repo || !v?.percent || !v) >= 0))) {
         setIsError(true)
