@@ -53,7 +53,7 @@ export const MyReposPage = () => {
     getManagementList();
   }, [getManagementList])
 
-  useInterval(() => activeGithubUser && Agent.getManagementList(activeGithubUser, searchQuery).then(data => { setRepoList(data); setLoading(false) }), 10 * 60 * 1000);
+  useInterval(() => activeGithubUser && Agent.getManagementList(activeGithubUser, searchQuery).then(data => { setRepoList(data); setLoading(false); if (exhausted) setExhausted(false); }).catch(() => setExhausted(true)), 10 * 60 * 1000);
 
   if (!activeGithubUser) {
     navigate("/add");
