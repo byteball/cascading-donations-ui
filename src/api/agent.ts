@@ -72,7 +72,7 @@ export class Agent {
       });
 
       const getters = githubNames.map((user) => client.api.getAaStateVars({
-        address: config.aa_attestor,
+        address: config.attestor_aa,
         var_prefix: `u2a_${user}`
       }).then((data: any) => ({ user, adr: data?.[`u2a_${user}`] })) as IStateVars);
 
