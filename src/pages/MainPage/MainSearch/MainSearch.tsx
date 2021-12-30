@@ -72,7 +72,7 @@ export const MainSearch: React.FC = memo(() => {
       </Form>
       <p className={styles.description}>Support open-source projects with donations in crypto, and they will automatically forward a part of your donation to other open-source projects that made them possible.</p>
     </Col>
-    <Col xs={24} sm={24} md={12}>
+    <Col xs={24} sm={24} md={16} lg={12}>
       <HowIllustration />
     </Col>
   </Row>
