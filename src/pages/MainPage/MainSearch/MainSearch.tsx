@@ -2,7 +2,6 @@ import { Col, Row, Form, Select } from "antd"
 import { useState, memo } from "react";
 import { debounce } from "lodash";
 import { useNavigate } from 'react-router-dom';
-import { useWindowSize } from "usehooks-ts";
 import ReactGA from "react-ga";
 import { SearchOutlined } from "@ant-design/icons";
 
@@ -16,7 +15,6 @@ export const MainSearch: React.FC = memo(() => {
   const [exhausted, setExhausted] = useState<boolean>(false);
 
   const navigate = useNavigate();
-  const { width } = useWindowSize();
 
   // handlers
   const handleSearch = async (value: any) => {
@@ -74,8 +72,8 @@ export const MainSearch: React.FC = memo(() => {
       </Form>
       <p className={styles.description}>Support open-source projects with donations in crypto, and they will automatically forward a part of your donation to other open-source projects that made them possible.</p>
     </Col>
-    {width >= 992 && <Col xs={24} sm={24} md={12}>
+    <Col xs={24} sm={24} md={12}>
       <HowIllustration />
-    </Col>}
+    </Col>
   </Row>
 })
