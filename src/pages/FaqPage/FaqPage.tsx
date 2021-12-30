@@ -22,9 +22,9 @@ export const FaqPage: React.FC = () => (
       )}
     >
       <Panel header="What coins are accepted for donations?" key="10">
-        <p>All Obyte tokens and tokens on other chains (Ehereum, BSC, Polygon) that are exportable to Obyte through <a href="https://counterstake.org" target="_blank" rel="noopener">Counterstake Bridge</a>. This includes many popular tokens such as USDC, ETH, WBTC, BNB, etc.</p>
+        <p>All Obyte tokens and tokens on other chains (Ethereum, BSC, Polygon) that are exportable to Obyte through <a href="https://counterstake.org" target="_blank" rel="noopener">Counterstake Bridge</a>. This includes many popular tokens such as USDC, ETH, WBTC, BNB, etc.</p>
       </Panel>
-      <Panel header="Can I donate with a creadit card?" key="20">
+      <Panel header="Can I donate with a credit card?" key="20">
         <p>Not directly but you can buy any of the supported crypto tokens with credit card through any of the existing fiat on-ramps and then donate those crypto tokens.</p>
       </Panel>
       <Panel header="Can I donate to any github repo even if their owner didn't set up anything on Kivach?" key="30">
@@ -34,7 +34,7 @@ export const FaqPage: React.FC = () => (
         <p>Use the <Link to="/add">Add repository</Link> link. You'll need to install <a href="https://obyte.org" target="_blank" rel="noopener">Obyte wallet</a> if you don't already have one and do github attestation (find the Github Attestation bot in the Bot Store in the wallet) to link your github account. Then, you set up the distribution rules and trigger the first distribution to claim the funds.</p>
       </Panel>
       <Panel header="I'm a developer and looking to receive donations. Are there any requirements as to what share of donations should be forwarded and to what repos?" key="50">
-        <p>There are no requirements, it's totally up to you. You can keep 100% of donations for yourself if you like, or, the other extreme, you can choose to forward 100% to other repos and leave nothing for yourself. We recommend forwarding some share of donations to other open-source projects that are critical for your project and made it possible. The donors will see your distribution rules and we expect that they will be more willing to donate when they see that they can help more than one project and you are also a donor (in a way).</p>
+        <p>There are no requirements, it's totally up to you. You can keep 100% of donations for yourself if you like, or, on the other extreme, you can choose to forward 100% to other repos and leave nothing for yourself. We recommend forwarding some share of donations to other open-source projects that are critical for your project and made it possible. The donors will see your distribution rules and we expect that they will be more willing to donate when they see that they can help more than one project and you are also a donor (in a way).</p>
       </Panel>
       <Panel header="Are Kivach donations tax deductible?" key="60">
         <p>You'd better consult a tax lawyer in your jurisdiction but to the best of our knowledge, they are not. Normally, tax exempt status is granted to certain entities that are registered and supervised by the respective government bodies. Kivach, on the other hand, exists in a decentralized space and can't enjoy such a status. This means that any donations you make on Kivach, you make them out of your (or your company's) <i>net</i> income and can't use them to reduce your taxes.</p>
