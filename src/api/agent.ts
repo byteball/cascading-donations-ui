@@ -64,7 +64,7 @@ export class Agent {
       const githubNames: string[] = [];
 
       attestations.forEach((a: any) => {
-        if (a.attestor_address === config.aa_attestor && a?.profile && a.profile.github_username) {
+        if (a.attestor_address === config.attestor && a?.profile && a.profile.github_username) {
           if (!githubNames.includes(a.profile.github_username)) {
             githubNames.push(a.profile.github_username);
           }
@@ -72,7 +72,7 @@ export class Agent {
       });
 
       const getters = githubNames.map((user) => client.api.getAaStateVars({
-        address: config.aa_attestor_forward,
+        address: config.aa_attestor,
         var_prefix: `u2a_${user}`
       }).then((data: any) => ({ user, adr: data?.[`u2a_${user}`] })) as IStateVars);
 
