@@ -81,7 +81,7 @@ export const settingsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getGithubUser.fulfilled, (state, action) => {
-      if (isArray(action.payload) && action.payload.length > 0) {
+      if (isArray(action.payload)) {
         const users = action.payload;
         state.githubUsers = users;
 
