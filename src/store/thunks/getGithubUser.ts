@@ -9,7 +9,7 @@ export const getGithubUser = createAsyncThunk(
     const state = store.getState();
     const walletAddress = state.settings.walletAddress;
     if (walletAddress) {
-      return await Agent.getGithubUserByObyteAddress(walletAddress);
+      return await Agent.getGithubUsersByObyteAddress(walletAddress);
     }
   }
 )

@@ -1,0 +1,22 @@
+.select {
+  max-width: 100%;
+  border-radius: 5px;
+}
+
+.select :global(.ant-select-arrow) {
+  width: 1em;
+  height: 1em;
+  margin-top: -0.5em;
+  font-size: 16px;
+  right: auto;
+  left: 10px;
+  cursor: default;
+}
+
+.select :global(.ant-select-selection-search-input) {
+  padding-left: 20px !important;
+}
+
+.select :global(.ant-select-selection-item) {
+  padding-left: 20px !important;
+}

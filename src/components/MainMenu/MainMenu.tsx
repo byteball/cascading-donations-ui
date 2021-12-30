@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from 'react-redux';
 
 import { AddWalletModal } from "modals";
-import { selectGithubUser } from 'store/slices/settingsSlice';
+import { selectActiveGithubUser } from 'store/slices/settingsSlice';
 
 import styles from "./MainMenu.module.css";
 
@@ -15,7 +15,7 @@ interface IMainMenu {
 }
 
 export const MainMenu: React.FC<IMainMenu> = ({ mode, pathname, onClose }) => {
-  const githubUser = useSelector(selectGithubUser);
+  const activeGithubUser = useSelector(selectActiveGithubUser);
 
   return (
     <Menu
@@ -50,7 +50,7 @@ export const MainMenu: React.FC<IMainMenu> = ({ mode, pathname, onClose }) => {
         </NavLink>
       </Menu.Item>
       
-      {githubUser && <Menu.Item key="/my">
+      {activeGithubUser && <Menu.Item key="/my">
         <NavLink to="/my"
           className={styles.link}
         >

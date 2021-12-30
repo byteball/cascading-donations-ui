@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { message } from "antd";
+import { isArray } from 'lodash';
 
 import { RootState } from "store";
 import { getGithubUser } from "store/thunks/getGithubUser";
@@ -14,13 +15,15 @@ interface IFilters {
 interface ICacheSlice {
   walletAddress: string | null;
   favorites: string[];
-  githubUser?: string | null;
+  githubUsers: string[];
+  activeGithubUser: string | null;
   filters: IFilters;
 }
 
 const initialState: ICacheSlice = {
   walletAddress: null,
-  githubUser: null,
+  githubUsers: [],
+  activeGithubUser: null,
   favorites: [],
   filters: {
     haveDonations: "all",
@@ -68,19 +71,35 @@ export const settingsSlice = createSlice({
     },
     removeFavorite: (state, action) => {
       state.favorites = state.favorites.filter((fullName) => fullName !== action.payload)
+    },
+    changeActiveGithubUser: (state, action) => {
+      const user = action.payload;
+      if (state.githubUsers && state.githubUsers.includes(user)) {
+        state.activeGithubUser = user;
+      }
     }
   },
   extraReducers: (builder) => {
     builder.addCase(getGithubUser.fulfilled, (state, action) => {
-      state.githubUser = action.payload;
+      if (isArray(action.payload)) {
+        const users = action.payload;
+        state.githubUsers = users;
+
+        if (state.activeGithubUser && users.includes(state.activeGithubUser)) {
+          // don't change
+        } else {
+          state.activeGithubUser = users[0];
+        }
+      }
     })
   }
 });
 
-export const { changeWallet, addFavorite, removeFavorite, changeFilters, removeFilter } = settingsSlice.actions;
+export const { changeWallet, addFavorite, removeFavorite, changeFilters, removeFilter, changeActiveGithubUser } = settingsSlice.actions;
 
 export const selectWalletAddress = (state: RootState) => state.settings.walletAddress;
-export const selectGithubUser = (state: RootState) => state.settings.githubUser;
+export const selectGithubUsers = (state: RootState) => state.settings.githubUsers;
+export const selectActiveGithubUser = (state: RootState) => state.settings.activeGithubUser;
 export const selectFavorites = (state: RootState) => state.settings.favorites;
 export const selectFilters = (state: RootState) => state.settings.filters || initialState.filters;
 
