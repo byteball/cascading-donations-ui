@@ -121,12 +121,11 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
       <Form.List name="rules" initialValue={initialRulesWithoutOwner}>
         {(fields, { add, remove }) => (
           <>
-            {fields.map(({ key, name, fieldKey, ...restField }) => (
+            {fields.map(({ key, name, ...restField }) => (
               <Form.Item key={key + 1} style={{ display: 'flex', marginBottom: 8, width: "100%", alignItems: "center" }}>
                 <Form.Item
                   {...restField}
                   name={[name, 'repo']}
-                  fieldKey={[fieldKey + 1, 'repo']}
                   style={{ width: "55%", marginRight: 8, display: "inline-block" }}
                   rules={[
                     { required: true, message: 'Missing Repository' },
@@ -171,7 +170,6 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
                   {...restField}
                   style={{ width: "calc(45% - 58px)", marginRight: 8, display: "inline-block" }}
                   name={[name, 'percent']}
-                  fieldKey={[fieldKey + 1, 'percent']}
                   rules={[{ required: true, message: 'Missing percent' }, { type: "number", min: 0.00001, max: 100, transform: (value) => Number(value), message: "Not valid percent" }]}
                 >
                   <Input placeholder="Percent" />
