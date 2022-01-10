@@ -55,6 +55,9 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
       setToken(undefined);
       setAmount("");
     } else {
+      if (tokensByNetwork?.base) {
+        setToken({ ...tokensByNetwork.base, asset: "base" })
+      }
       setInited(true)
     }
   }, [network])
@@ -158,7 +161,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
   const linkToDonate = token && network === "Obyte" ? generateLink({ amount: Math.ceil(Number(amount) * 10 ** token.decimals) + (token.asset === "base" ? 1e4 : 0), aa: config.aa_address, asset: token?.asset, data: { donate: 1, repo: fullName }, from_address: walletAddress }) : "";
 
   const sendDonationEventToGA = () => {
-    if (token){
+    if (token) {
       ReactGA.event({
         category: "Donate",
         action: `${token.symbol}@${token.network}`,
@@ -228,6 +231,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
       </Form>
       <div ref={buttonRef} className={styles.buttonWrap}>
         {network === "Obyte" ? <QRButton href={linkToDonate} type="primary" disabled={!token || Number(amount) === 0 || amount === "." || typeof amount !== "string"} onClick={sendDonationEventToGA}>Donate</QRButton> : <Button type="primary" loading={donationProcessIsActive || ((maxAmount === undefined) && !!token)} onClick={handleDonate} disabled={poolStatus === "loading" || Number(amount) === 0 || !token || amount === "." || typeof amount !== "string" || maxAmount === undefined || (Number(amount) > (maxAmount || 0))}>Donate</Button>}
+        {token?.price && amount && Number(amount) > 0 ? <span className={styles.price}>≈ ${+Number(token.price * Number(amount)).toFixed(2)}</span> : null}
       </div>
 
       <div className={styles.warning}>

@@ -24,12 +24,6 @@ export const tokensSlice = createSlice({
 
     builder.addCase(getTokensThunk.fulfilled, (state, action) => {
       const data = action.payload;
-      if (data.Obyte) {
-        data.Obyte.base = {
-          symbol: "GBYTE",
-          decimals: 9
-        }
-      }
       state.data = data;
       state.status = 'loaded'
     })
