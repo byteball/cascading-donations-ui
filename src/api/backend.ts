@@ -29,6 +29,7 @@ export interface IToken {
   network?: string;
   asset?: string;
   obyte_asset?: string;
+  price?: number | null;
 }
 
 export interface ITokens {

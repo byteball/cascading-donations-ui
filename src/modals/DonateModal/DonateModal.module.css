@@ -19,6 +19,13 @@
 
 .buttonWrap {
   margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.price {
+  margin-left: 5px;
+  color: #767676;
 }
 
 .warning {

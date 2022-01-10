@@ -8,9 +8,14 @@ import { getTokensThunk } from './store/thunks/getTokens';
 import { getIconList } from "store/thunks/getIconList";
 import { MainPage, RepositoryPage, AddPage, FaqPage, MyReposPage } from "pages";
 import { clearAllCache } from "store/actions/clearAllCache";
+import { useInterval } from 'usehooks-ts';
 
 export const AppRouter: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
+
+  const updateTokens = () => dispatch(getTokensThunk());
+  
+  useInterval(updateTokens, 15 * 1000 * 60);
 
   useEffect(() => {
     dispatch(getTokensThunk());
