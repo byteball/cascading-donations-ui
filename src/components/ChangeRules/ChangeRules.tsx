@@ -61,10 +61,10 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
 
   const handleSearch = async (value: any) => {
     if (value && value.includes("/")) {
-      const [owner, name] = value.split("/");
+      const [owner, name] = value.replace("https://github.com/", "").split("/");
       try {
         const result = await Github.getReposListByUser(owner, name);
-        setData(name ? result.filter((repo) => repo.title.includes(value)) : result);
+        setData(name ? result.filter((repo) => repo.title.includes(`${owner}/${name}`)) : result);
         setExhausted(false);
       } catch {
         setExhausted(true);
