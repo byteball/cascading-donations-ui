@@ -1,5 +1,5 @@
 import github, { ISearchResultItem } from "api/github";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { Select, Spin, Form, Typography, Row, Col, Input, Button, message, Image } from "antd";
 import { CheckCircleOutlined, CopyOutlined, SearchOutlined } from "@ant-design/icons";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -31,7 +31,7 @@ interface ILoadedPools {
   status: "loading" | "loaded";
 }
 
-export const LastStep = () => {
+export const LastStep = memo(() => {
   const [selectedRepoName, setSelectedRepoName] = useState<string | undefined>();
   const [reposList, setReposList] = useState<IReposList>({ status: "loading", data: [] });
   const [pools, setPools] = useState<ILoadedPools>({ pools: [], status: "loading" });
@@ -55,7 +55,11 @@ export const LastStep = () => {
     }
   }, [selectedRepoName])
 
-  setInterval(getRules, 1000 * 60 * 10)
+  setInterval(async () => {
+    if (selectedRepoName && !rulesExist.exist) {
+      await Agent.getRules(selectedRepoName).then(([_, exist]) => exist && setRulesExist({ status: "loaded", exist }));
+    }
+  }, 1000 * 60 * 10)
 
   useEffect(() => {
     getPools();
@@ -147,7 +151,7 @@ export const LastStep = () => {
       </div>}
     </div>}
   </div>
-}
+})
 
 
 
