@@ -39,7 +39,7 @@ client.onConnect(() => {
     if (subject === "light/aa_request") {
       const state = store.getState();
       if (state.settings.walletAddress === author) {
-        message.success("We have received your request. The interface will update after the transaction stabilizes");
+        message.success("Received your request. The interface will update after the transaction stabilizes.");
       } else if (payload && ("donate" in payload) && ("repo" in payload)) {
         notification.open({
           message: `${author.slice(0, 10)}... donated to ${payload.repo}`,
