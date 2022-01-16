@@ -7,6 +7,7 @@
 		"repo": "Name of the repository: owner/project.",
 		"set_rules": "Whether to set the distribution rules.",
 		"rules": "Distribution rules.",
+		"notification_aa": "AA for notifications about new donations.",
 		"donate": "Donate to a repo, set to 1.",
 		"donor": "Address of the donor.",
 		"distribute": "Distrubute the donations, set to 1.",
