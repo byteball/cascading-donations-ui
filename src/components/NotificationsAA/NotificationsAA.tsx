@@ -34,12 +34,11 @@ export const NotificationsAA: React.FC<INotificationsAA> = ({ fullName }) => {
 
   return <div>
     <p>
-      After each donation, a request with data will be sent to this AA.
-      Data to be sent: repo, donor, amount, asset;
+      Optionally set up an AA to receive notifications about every donation. The AA might perform any action you choose, for example issue a token to the donor or track statistics.
     </p>
 
     <p>
-      To learn how to create your own autonomous agent, please go to the <a target="_blank" href="https://developer.obyte.org/autonomous-agents/getting-started-guide" rel="noopener">developer.obyte.org</a>. You can see an example on <a href="https://oscript.org/s/rfXy0oO3o9UttDN8Fid6aUpQKvdMyNtI" target="_blank" rel="noopener">oscript.org</a>
+      AAs are written in <a target="_blank" href="https://developer.obyte.org/autonomous-agents/getting-started-guide" rel="noopener">oscript</a> language. This is <a href="https://oscript.org/s/ayduFGpeBpnB7UYu7PUGYWorBL4UMkKS" target="_blank" rel="noopener">an example</a> of an AA that issues a token in response to donations.
     </p>
     <Form>
       <Form.Item validateStatus={aaAddress.value ? (aaAddress.valid ? "success" : "error") : ""}>

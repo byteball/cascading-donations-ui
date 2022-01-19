@@ -73,7 +73,7 @@ export const SettingsModal: React.FC<ISettingsModal> = memo(({ fullName, childre
               </Form>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} lg={{ span: 12 }}>
-              <Image src={`${config.backend_url}/banner?repo=${fullName}`} preview={false} alt="Cascading donation" />
+              <Image src={`${config.backend_url}/banner?repo=${fullName}`} preview={false} alt="Cascading donations" />
             </Col>
           </Row>
         </TabPane>

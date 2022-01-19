@@ -77,7 +77,7 @@ export const AddWalletModal: React.FC<IAddWalletModal> = ({ triggerButtonIsPrima
       <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
         {currentWalletAddress ? "Change" : "Add"} wallet address
       </div>
-      {!currentWalletAddress && <p>You need it to set up your own repos and receive donations.</p>}
+      {!currentWalletAddress && <p>You need it to set up your own repos and receive donations. This address will also show up as donor when you donate from networks other than Obyte (Ethereum, BSC, etc).</p>}
       <Form size="large">
         <Form.Item validateStatus={walletAddress.value === "" ? "" : (walletAddress.valid ? "success" : "error")}>
           <Input autoFocus={true} value={walletAddress.value} placeholder="Example: 2QVJOY3BRRGWP7IOYL64O5B..." onChange={handleWalletAddress} onKeyDown={handleEnter} ref={inputRef} />

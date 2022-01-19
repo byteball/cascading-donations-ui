@@ -243,7 +243,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
       <div className={styles.warning}>
         {network === "Obyte"
           ? <small>0.00001 GB will be added as a fee</small>
-          : <small>To accept donations from networks other than Obyte, we use a <a target="_blank" href="https://counterstake.org/" rel="noopener">counterstake.org</a>. 1% will be subtracted from the donated amount to pay for the cross-chain transfer and it'll take a bit longer.</small>}
+          : <small>To accept donations from networks other than Obyte, we use <a target="_blank" href="https://counterstake.org/" rel="noopener">counterstake.org</a>. 1% will be subtracted from the donated amount to pay for the cross-chain transfer and it'll take a bit longer.</small>}
       </div>
     </Modal>
   </>
