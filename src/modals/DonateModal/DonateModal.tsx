@@ -116,7 +116,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
   const handleDonate = async () => {
     if (!network || !token || network === "Obyte") return null;
     setDonationProcessIsActive(true);
-    if (convert) {
+    if (poolStatus === "exists" && convert) {
       try {
         await transferEVM2Obyte({
           src_network: network,
