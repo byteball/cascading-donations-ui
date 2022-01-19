@@ -180,7 +180,7 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
               </Form.Item>
             ))}
             <Form.Item>
-              <Button type="dashed" disabled={fields.length > 10} style={{ width: "calc(100% - 50px)" }} onClick={() => add()} block icon={<PlusOutlined />}>
+              <Button type="dashed" disabled={fields.length > 9} style={{ width: "calc(100% - 50px)" }} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add recipient
               </Button>
             </Form.Item>
@@ -189,9 +189,6 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
       <Form.Item>
         {percentSum > 100 && <Form.Item>
           <Alert type="error" message="The maximum cumulative percentage must not exceed 100" />
-        </Form.Item>}
-        {resultRules && Object.keys(resultRules).length > 10 && <Form.Item>
-          <Alert type="error" message="Maximum number of recipient repositories is 10" />
         </Form.Item>}
         <QRButton type="primary" href={link} disabled={isError || (values.length !== 0 && percentSum > 100) || (isEmpty(resultRules) ? false : Object.keys(resultRules).length > 10)} onClick={sendSetRulesEventToGA}>
           Save rules
