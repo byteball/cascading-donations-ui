@@ -14,9 +14,10 @@ interface IWalletAddress {
 
 interface IAddWalletModal {
   triggerButtonIsPrimary?: boolean;
+  triggerButtonIsLink?: boolean;
 }
 
-export const AddWalletModal: React.FC<IAddWalletModal> = ({ triggerButtonIsPrimary }) => {
+export const AddWalletModal: React.FC<IAddWalletModal> = ({ triggerButtonIsPrimary, triggerButtonIsLink, children }) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [walletAddress, setWalletAddress] = useState<IWalletAddress>({ value: "", valid: false });
   const dispatch = useDispatch();
@@ -60,7 +61,7 @@ export const AddWalletModal: React.FC<IAddWalletModal> = ({ triggerButtonIsPrima
   }
 
   return <>
-    <Button onClick={handleOpen} type={triggerButtonIsPrimary ? "primary" : "default"}>{currentWalletAddress ? truncate(currentWalletAddress, 10) : "ADD WALLET"}</Button>
+    <Button onClick={handleOpen} style={triggerButtonIsLink ? { padding: 0, fontSize: "1em", display: "inline", height: "auto" } : {}} type={triggerButtonIsPrimary ? "primary" : (triggerButtonIsLink ? "link" : "default")}>{currentWalletAddress ? truncate(currentWalletAddress, 10) : (children || "ADD WALLET")}</Button>
     <Modal
       visible={visible}
       title={null}

@@ -6,6 +6,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { ChangeRules } from "components/ChangeRules/ChangeRules";
 import { Distribute } from "components/Distribute/Distribute";
+import { NotificationsAA } from "components/NotificationsAA/NotificationsAA";
 import { getAvatarLink, generateBannerCode } from "utils";
 import config from 'config';
 
@@ -75,6 +76,9 @@ export const SettingsModal: React.FC<ISettingsModal> = memo(({ fullName, childre
               <Image src={`${config.backend_url}/banner?repo=${fullName}`} preview={false} alt="Cascading donation" />
             </Col>
           </Row>
+        </TabPane>
+        <TabPane tab="Notifications" key="4">
+          <NotificationsAA fullName={fullName} />
         </TabPane>
       </Tabs>
     </Modal>

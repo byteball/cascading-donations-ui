@@ -3,6 +3,7 @@ import { Select, Spin, Form, Empty, Result } from "antd";
 import QRButton from "obyte-qr-button";
 import { useSelector } from "react-redux";
 import ReactGA from "react-ga";
+import { useInterval } from 'usehooks-ts';
 
 import { selectWalletAddress } from "store/slices/settingsSlice";
 import { selectObyteTokens } from 'store/slices/tokensSlice';
@@ -39,7 +40,12 @@ export const Distribute: React.FC<IDistribute> = ({ fullName }) => {
   const tokens = useSelector(selectObyteTokens);
   const walletAddress = useSelector(selectWalletAddress);
 
-  const getPools = () => Agent.getPoolsByFullName(fullName).then((pools) => setPools({ pools, status: "loaded" }));
+  const getPools = () => Agent.getPoolsByFullName(fullName).then((pools) => {
+    setPools({ pools, status: "loaded" })
+    if (selectedPool) {
+      setSelectedPool(pools.find((pool) => pool.asset === selectedPool.asset));
+    }
+  });
 
   const getRules = async () => {
     setRules({ rules: [], status: "loading", exists: false });
@@ -50,6 +56,8 @@ export const Distribute: React.FC<IDistribute> = ({ fullName }) => {
     getPools();
     getRules();
   }, []);
+
+  useInterval(getPools, 5 * 1000 * 60);
 
   const link = generateLink({ amount: 1e4, data: { asset: selectedPool?.asset, distribute: 1, repo: fullName }, aa: config.aa_address, from_address: walletAddress });
 
@@ -85,7 +93,7 @@ export const Distribute: React.FC<IDistribute> = ({ fullName }) => {
 
     {selectedPool && <div style={{ marginBottom: 10 }}>
       <div style={{ marginTop: 10 }}>
-        {rules.rules.sort((a, b) => b.percent - a.percent).map((rule) => (<div key={`${fullName}-${rule.percent}`} style={{ paddingTop: 2, paddingBottom: 2 }}>
+        {rules.rules.sort((a, b) => b.percent - a.percent).map((rule) => (<div key={`${fullName}-item-distribute`} style={{ paddingTop: 2, paddingBottom: 2 }}>
           <b>{rule.repo === fullName ? "You" : rule.repo}</b> will receive <b>{selectedPoolAssetInfo ? `${+Number(selectedPool.amount * rule.percent / 100).toFixed(selectedPoolAssetInfo.decimals) / 10 ** selectedPoolAssetInfo.decimals} ${selectedPoolAssetInfo.symbol}` : `${selectedPool.amount * rule.percent / 100} ${truncate(selectedPool.asset, 15)}`}</b>
         </div>))}
       </div>
