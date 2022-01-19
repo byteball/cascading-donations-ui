@@ -40,7 +40,7 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
   if (recipients) {
     const config = {
       appendPadding: width >= 830 ? 10 : 0,
-      data: recipients.map((item: IParsedRule) => ({ ...item, color: "blue", repo: item.percent < 7 ? "" : item.repo })),
+      data: recipients.map((item: IParsedRule) => ({ ...item, color: "blue" })).sort((a, b)=> a.repo !== fullName ? b.percent - a.percent : 1000),
       angleField: 'percent',
       colorField: 'repo',
       pieStyle: (type: IParsedRule) => {
@@ -80,7 +80,8 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
           fill: "#2D2C2C",
           background: "red",
         },
-        autoRotate: false
+        autoRotate: false,
+        labelHeight: 40
       },
 
       tooltip: {

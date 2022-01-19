@@ -134,6 +134,21 @@ export class Agent {
 
     return listByGithubName;
   }
+
+  static getNotificationAAByRepo = async (fullName: string) => {
+    const var_prefix = `${fullName}*notification_aa`;
+
+    const stateVars = await client.api.getAaStateVars({
+      address: config.aa_address,
+      var_prefix
+    }) as IStateVars;
+
+    if (var_prefix in stateVars) {
+      return stateVars[var_prefix];
+    } else {
+      return null
+    }
+  }
 }
 
 export const getAttestations = (walletAddress: string) => {
