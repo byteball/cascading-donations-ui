@@ -42,7 +42,7 @@ client.onConnect(() => {
         message.success("Received your request. The interface will update after the transaction stabilizes.");
       } else if (payload && ("donate" in payload) && ("repo" in payload)) {
         notification.open({
-          message: `${author.slice(0, 10)}... donated to ${payload.repo}`,
+          message: `${author.slice(0, 10)}... has donated to ${payload.repo}`,
           type: "info"
         });
       }

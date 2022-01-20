@@ -42,7 +42,7 @@ export const responseToEvent = (responses: IResponse[], tokens: IObyteTokens | u
           const asset = donatedVarName.split("_")?.[2];
           const amount = responseVars[donatedVarName];
           const donor = responseVars?.donor || trigger_address;
-          message = <span><a target="_blank" rel="noopener" href={`https://${config.testnet ? "testnet" : ""}explorer.obyte.org/#${donor}`}>{donor.slice(0, 10)}...</a> donated {amount / (10 ** ((asset in tokens) ? (tokens[asset].decimals || 0) : 0))} {asset in tokens ? tokens[asset].symbol : asset.slice(0, 5)} to <Link to={`/repo/${repository}`}>{repository}</Link></span>
+          message = <span><a target="_blank" rel="noopener" href={`https://${config.testnet ? "testnet" : ""}explorer.obyte.org/#${donor}`}>{donor.slice(0, 10)}...</a> has donated {amount / (10 ** ((asset in tokens) ? (tokens[asset].decimals || 0) : 0))} {asset in tokens ? tokens[asset].symbol : asset.slice(0, 5)} to <Link to={`/repo/${repository}`}>{repository}</Link></span>
         } else {
           return null;
         }

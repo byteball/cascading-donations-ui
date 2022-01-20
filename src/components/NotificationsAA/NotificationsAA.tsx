@@ -38,7 +38,7 @@ export const NotificationsAA: React.FC<INotificationsAA> = ({ fullName }) => {
     </p>
 
     <p>
-      AAs are written in <a target="_blank" href="https://developer.obyte.org/autonomous-agents/getting-started-guide" rel="noopener">oscript</a> language. This is <a href="https://oscript.org/s/ayduFGpeBpnB7UYu7PUGYWorBL4UMkKS" target="_blank" rel="noopener">an example</a> of an AA that issues a token in response to donations.
+      AAs are written in <a target="_blank" href="https://developer.obyte.org/autonomous-agents/getting-started-guide" rel="noopener">oscript</a> language. <a href="https://oscript.org/s/ayduFGpeBpnB7UYu7PUGYWorBL4UMkKS" target="_blank" rel="noopener">This is an example</a> of an AA that issues a token in response to donations.
     </p>
     <Form>
       <Form.Item validateStatus={aaAddress.value ? (aaAddress.valid ? "success" : "error") : ""}>

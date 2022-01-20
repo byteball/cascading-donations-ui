@@ -180,7 +180,7 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
               </Form.Item>
             ))}
             <Form.Item>
-              <Button type="dashed" disabled={fields.length > 9} style={{ width: "calc(100% - 50px)" }} onClick={() => add()} block icon={<PlusOutlined />}>
+              <Button type="dashed" disabled={fields.length >= 10} style={{ width: "calc(100% - 50px)" }} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add recipient
               </Button>
             </Form.Item>
