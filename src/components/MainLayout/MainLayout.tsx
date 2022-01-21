@@ -10,6 +10,7 @@ import ReactGA from "react-ga";
 import { MainMenu } from "components/MainMenu/MainMenu";
 import { getGithubUser } from "store/thunks/getGithubUser";
 import { selectWalletAddress } from "store/slices/settingsSlice";
+import { SocialIcons } from "components/SocialIcons/SocialIcons";
 
 import styles from "./MainLayout.module.css";
 
@@ -82,7 +83,8 @@ export const MainLayout: React.FC = ({ children }) => {
         </div>
       </Content>
       <Footer style={{ textAlign: "center" }}>
-        <div style={{ fontWeight: 300, fontSize: 12 }}>All information about repositories belongs to their owners</div>
+        <SocialIcons centered />
+        <div style={{ fontWeight: 300, fontSize: 12, marginTop: 10 }}>All information about repositories belongs to their owners</div>
         &copy; <a target="_blank" rel="noopener" href="https://obyte.org" className={styles.footerLink}>Obyte</a>
       </Footer>
     </Layout>
