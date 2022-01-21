@@ -1,0 +1,17 @@
+{
+	"version": "1.0",
+	"description": "Cascading donations AA.",
+	"homepage_url": "https://kivach.org",
+	"source_url": "https://github.com/byteball/obyte-cascading-donations",
+	"field_descriptions": {
+		"repo": "Name of the repository: owner/project.",
+		"set_rules": "Whether to set the distribution rules.",
+		"rules": "Distribution rules.",
+		"notification_aa": "AA for notifications about new donations.",
+		"donate": "Donate to a repo, set to 1.",
+		"donor": "Address of the donor.",
+		"distribute": "Distrubute the donations, set to 1.",
+		"to": "Address to pay the owner's share to.",
+		"nickname": "A nickname to set for your address."
+	}
+}

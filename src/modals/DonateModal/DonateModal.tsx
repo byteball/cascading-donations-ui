@@ -13,6 +13,7 @@ import config from 'config';
 import { client } from "obyteInstance";
 import { selectIconList } from "store/slices/cacheSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
+import { AddWalletModal } from '../AddWalletModal/AddWalletModal';
 
 import styles from "./DonateModal.module.css";
 
@@ -73,8 +74,13 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
     if (token && token.asset) {
       if (network !== "Obyte") {
         setMaxAmount(undefined)
-        const max_amount = await findBridge(network, "Obyte", token.asset, config.testnet).then(bridge => bridge.max_amount || 0);
-        setMaxAmount(max_amount);
+        try {
+          const max_amount = await findBridge(network, "Obyte", token.asset, config.testnet).then(bridge => bridge.max_amount || 0);
+          setMaxAmount(max_amount);
+        } catch {
+          setMaxAmount(0);
+        }
+
       } else {
         setMaxAmount(undefined)
       }
@@ -110,7 +116,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
   const handleDonate = async () => {
     if (!network || !token || network === "Obyte") return null;
     setDonationProcessIsActive(true);
-    if (convert) {
+    if (poolStatus === "exists" && convert) {
       try {
         await transferEVM2Obyte({
           src_network: network,
@@ -194,7 +200,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
 
       <Form layout="vertical" size="large">
         <span className={styles.label}>Network:</span>
-        <Form.Item className="itemWithSelectIcons">
+        <Form.Item className="itemWithSelectIcons" extra={(!walletAddress && network !== "Obyte") ? <div style={{ fontSize: 12, paddingTop: 5 }}>To have your donations tracked to you when you donate from other networks, please <AddWalletModal triggerButtonIsLink>add your Obyte address</AddWalletModal>.</div> : null}>
           <Select placeholder="Network" value={network} onChange={(network) => setNetwork(network)}>
             {networks.map((network) => <Select.Option value={network} key={`network-${network}`}>
               <div className={styles.optionWrapper}>
@@ -207,7 +213,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
         <span className={styles.label}>Token:</span>
         <Form.Item className="itemWithSelectIcons">
           <Select showSearch optionFilterProp="label" placeholder="Token" value={token?.asset} onChange={(asset) => tokensByNetwork?.[asset]?.symbol && setToken({ ...tokensByNetwork?.[asset], asset })}>
-            {tokensByNetwork && Object.keys(tokensByNetwork).map((asset) => {
+            {tokensByNetwork && Object.keys(tokensByNetwork).sort((a, b) => (tokensByNetwork[a] ? tokensByNetwork[a].symbol : "").localeCompare(tokensByNetwork[b] ? tokensByNetwork[b].symbol : "")).map((asset) => {
               const symbol = tokensByNetwork?.[asset]?.symbol;
               const iconName = symbol && iconList.find((iconName) => symbol.includes(iconName))
 
@@ -237,7 +243,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
       <div className={styles.warning}>
         {network === "Obyte"
           ? <small>0.00001 GB will be added as a fee</small>
-          : <small>To accept donations from networks other than Obyte, we use a <a target="_blank" href="https://counterstake.org/" rel="noopener">counterstake.org</a>. 1% will be subtracted from the donated amount to pay for the cross-chain transfer and it'll take a bit longer.</small>}
+          : <small>To accept donations from networks other than Obyte, we use <a target="_blank" href="https://counterstake.org/" rel="noopener">counterstake.org</a>. 1% will be subtracted from the donated amount to pay for the cross-chain transfer and it'll take a bit longer.</small>}
       </div>
     </Modal>
   </>

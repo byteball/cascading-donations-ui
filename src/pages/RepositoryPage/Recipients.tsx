@@ -40,7 +40,7 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
   if (recipients) {
     const config = {
       appendPadding: width >= 830 ? 10 : 0,
-      data: recipients.map((item: IParsedRule) => ({ ...item, color: "blue", repo: item.percent < 7 ? "" : item.repo })),
+      data: recipients.map((item: IParsedRule) => ({ ...item, color: "blue" })).sort((a, b)=> a.repo !== fullName ? b.percent - a.percent : 1000),
       angleField: 'percent',
       colorField: 'repo',
       pieStyle: (type: IParsedRule) => {
@@ -72,15 +72,16 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
       label: {
         type: width >= 830 ? 'spider' : 'inner',
         content: width >= 830 ? `{name}
-        {percentage}` : (item: any) => `${truncate(item.repo, 15)} 
-        ${item.repo ? (item.percent * 100).toFixed(0) + "%" : ""}`,
+        {percentage}` : (item: any) => item.percent > 0.07 ? `${truncate(item.repo, 15)} 
+        ${item.repo ? (item.percent * 100).toFixed(0) + "%" : ""}`: "",
         style: {
           fontSize: width >= 600 ? 12 : 10,
           textAlign: "center",
           fill: "#2D2C2C",
           background: "red",
         },
-        autoRotate: false
+        autoRotate: false,
+        labelHeight: 40
       },
 
       tooltip: {
@@ -99,7 +100,7 @@ export const Recipients: React.FC<IRecipients> = memo(({ fullName, rules }) => {
                       style={{ padding: 3 }}
                     >
                       <span
-                        style={{ display: 'inline-flex', flex: 1, justifyContent: 'space-between', alignItems: "center" }}
+                        style={{ lineHeight: 1.3 }}
                       >
                         <img src={avatarUrl} style={{ width: "1em", height: "1em", borderRadius: 5, marginRight: 5 }} alt={name} />
                         <span style={{ marginRight: 4 }}>{name}</span>

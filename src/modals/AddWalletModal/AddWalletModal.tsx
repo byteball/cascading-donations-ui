@@ -14,9 +14,10 @@ interface IWalletAddress {
 
 interface IAddWalletModal {
   triggerButtonIsPrimary?: boolean;
+  triggerButtonIsLink?: boolean;
 }
 
-export const AddWalletModal: React.FC<IAddWalletModal> = ({ triggerButtonIsPrimary }) => {
+export const AddWalletModal: React.FC<IAddWalletModal> = ({ triggerButtonIsPrimary, triggerButtonIsLink, children }) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [walletAddress, setWalletAddress] = useState<IWalletAddress>({ value: "", valid: false });
   const dispatch = useDispatch();
@@ -60,7 +61,7 @@ export const AddWalletModal: React.FC<IAddWalletModal> = ({ triggerButtonIsPrima
   }
 
   return <>
-    <Button onClick={handleOpen} type={triggerButtonIsPrimary ? "primary" : "default"}>{currentWalletAddress ? truncate(currentWalletAddress, 10) : "ADD WALLET"}</Button>
+    <Button onClick={handleOpen} style={triggerButtonIsLink ? { padding: 0, fontSize: "1em", display: "inline", height: "auto" } : {}} type={triggerButtonIsPrimary ? "primary" : (triggerButtonIsLink ? "link" : "default")}>{currentWalletAddress ? truncate(currentWalletAddress, 10) : (children || "ADD WALLET")}</Button>
     <Modal
       visible={visible}
       title={null}
@@ -76,7 +77,7 @@ export const AddWalletModal: React.FC<IAddWalletModal> = ({ triggerButtonIsPrima
       <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 20 }}>
         {currentWalletAddress ? "Change" : "Add"} wallet address
       </div>
-      {!currentWalletAddress && <p>You need it to set up your own repos and receive donations.</p>}
+      {!currentWalletAddress && <p>You need it to set up your own repos and receive donations. This address will also show up as donor when you donate from networks other than Obyte (Ethereum, BSC, etc).</p>}
       <Form size="large">
         <Form.Item validateStatus={walletAddress.value === "" ? "" : (walletAddress.valid ? "success" : "error")}>
           <Input autoFocus={true} value={walletAddress.value} placeholder="Example: 2QVJOY3BRRGWP7IOYL64O5B..." onChange={handleWalletAddress} onKeyDown={handleEnter} ref={inputRef} />

@@ -1,5 +1,6 @@
 # cascading donations ui
 
+[kivach.org](https://kivach.org)
 
 ## Install
 
@@ -24,3 +25,9 @@ yarn start
 ```sh
 yarn build
 ```
+
+## Donations
+
+Kivach uses itself :) to accept donations and forward a portion of them to other open-source projects that made Kivach possible.
+
+[![Kivach](https://kivach.org/api/banner?repo=byteball/cascading-donations-ui)](https://kivach.org/repo/byteball/cascading-donations-ui)

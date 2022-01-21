@@ -176,7 +176,7 @@ class Github {
     } else {
       try {
         if (owner && name) {
-          q = `user:${owner} ${name} fork:true`;
+          q = `${name} in:name user:${owner} fork:true`;
         }
 
         result = await this.github.request('GET /search/repositories', {
