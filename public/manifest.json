@@ -1,6 +1,6 @@
 {
   "short_name": "Kivach",
-  "name": "Simple, fast and secure donations to ant github repository",
+  "name": "Kivach — cascading donations to github repositories",
   "icons": [
     {
       "src": "logo.svg",
