@@ -30,10 +30,14 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
   const [values, setValues] = useState<IValues>([]);
   const [isError, setIsError] = useState(false);
   const [data, setData] = useState<ISearchResultItem[]>([]);
+  const [exist, setExist] = useState(false);
   const walletAddress = useSelector(selectWalletAddress);
 
   const updateRules = () => {
-    Agent.getRules(fullName).then(([rules]) => setInitialRules(rules))
+    Agent.getRules(fullName).then(([rules, exist]) => {
+      setInitialRules(rules);
+      setExist(exist);
+    })
   };
 
   useEffect(() => {
@@ -94,7 +98,7 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
   const sendSetRulesEventToGA = () => {
     ReactGA.event({
       category: "Manage",
-      action: "Set rules",
+      action: `${exist ? "Change" : "Set"} rules`,
       label: fullName
     })
   }
