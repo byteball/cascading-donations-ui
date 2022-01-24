@@ -24,8 +24,10 @@ export const tokensSlice = createSlice({
 
     builder.addCase(getTokensThunk.fulfilled, (state, action) => {
       const data = action.payload;
-      state.data = data;
-      state.status = 'loaded'
+      if (data) {
+        state.data = data;
+        state.status = 'loaded'
+      }
     })
   }
 });

@@ -59,7 +59,7 @@ export const Distribute: React.FC<IDistribute> = ({ fullName }) => {
 
   useInterval(getPools, 5 * 1000 * 60);
 
-  const link = generateLink({ amount: 1e4, data: { asset: selectedPool?.asset, distribute: 1, repo: fullName }, aa: config.aa_address, from_address: walletAddress });
+  const link = generateLink({ amount: 1e4, data: { asset: selectedPool?.asset, distribute: 1, repo: String(fullName).toLowerCase() }, aa: config.aa_address, from_address: walletAddress });
 
   const selectedPoolAssetInfo = tokens && selectedPool ? tokens[selectedPool.asset] : null;
 
