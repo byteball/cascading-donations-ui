@@ -193,6 +193,20 @@ class Github {
     return result;
   }
 
+  existsRepo = async (fullName: string): Promise<boolean> => {
+    const [owner, repo] = fullName.split("/");
+    try {
+      await this.github.rest.repos.get({
+        owner,
+        repo
+      });
+      
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   checkBanner = async (fullName: string): Promise<boolean> => {
     const state = store.getState();
     const allCache = state.cache.bannerExists.data;
