@@ -164,7 +164,7 @@ const DonateModal: React.FC<IDonateModal> = memo(({ owner, name }) => {
     }
   }
 
-  const linkToDonate = token && network === "Obyte" ? generateLink({ amount: Math.ceil(Number(amount) * 10 ** token.decimals) + (token.asset === "base" ? 1e4 : 0), aa: config.aa_address, asset: token?.asset, data: { donate: 1, repo: fullName }, from_address: walletAddress }) : "";
+  const linkToDonate = token && network === "Obyte" ? generateLink({ amount: Math.ceil(Number(amount) * 10 ** token.decimals) + (token.asset === "base" ? 1e4 : 0), aa: config.aa_address, asset: token?.asset, data: { donate: 1, repo: String(fullName).toLowerCase() }, from_address: walletAddress }) : "";
 
   const sendDonationEventToGA = () => {
     if (token) {

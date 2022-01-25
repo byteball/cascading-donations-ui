@@ -1,6 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
 import { backendAPI } from 'api/backend';
+import { isEmpty } from 'lodash';
+
+import { store } from "store";
 
 export const getTokensThunk = createAsyncThunk(
   'get/tokens',
@@ -8,15 +10,18 @@ export const getTokensThunk = createAsyncThunk(
     try {
       return await backendAPI.getTokens();
     } catch {
-      return ({
-        Obyte: {
-          base: {
-            asset: "base",
-            symbol: "GBYTE",
-            decimals: 9
+      const state = store.getState();
+      if (isEmpty(state?.tokens?.data?.Obyte)){
+        return ({
+          Obyte: {
+            base: {
+              asset: "base",
+              symbol: "GBYTE",
+              decimals: 9
+            }
           }
-        }
-      })
+        })
+      }
     }
   }
 )

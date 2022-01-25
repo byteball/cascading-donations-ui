@@ -93,7 +93,7 @@ export const ChangeRules: React.FC<IChangeRules> = memo(({ rules: actualRules, f
     })
   }
 
-  const link = generateLink({ amount: 1e4, aa: config.aa_address, data: { set_rules: 1, repo: fullName, rules: !isEmpty(resultRules) ? resultRules : false }, from_address: walletAddress });
+  const link = generateLink({ amount: 1e4, aa: config.aa_address, data: { set_rules: 1, repo: String(fullName).toLowerCase(), rules: !isEmpty(resultRules) ? resultRules : false }, from_address: walletAddress });
 
   const sendSetRulesEventToGA = () => {
     ReactGA.event({

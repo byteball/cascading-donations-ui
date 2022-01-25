@@ -30,7 +30,7 @@ export const NotificationsAA: React.FC<INotificationsAA> = ({ fullName }) => {
     })
   }
 
-  const link = generateLink({ amount: 1e4, data: { notification_aa: aaAddress.value, distribute: 1, repo: fullName }, aa: config.aa_address, from_address: walletAddress });
+  const link = generateLink({ amount: 1e4, data: { notification_aa: aaAddress.value, distribute: 1, repo: String(fullName).toLowerCase() }, aa: config.aa_address, from_address: walletAddress });
 
   return <div>
     <p>
