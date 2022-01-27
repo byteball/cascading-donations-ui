@@ -10,6 +10,8 @@ import { ReactComponent as HowIllustration } from './how.svg';
 
 import styles from "./MainSearch.module.css";
 
+const githubUrl = "https://github.com/";
+
 export const MainSearch: React.FC = memo(() => {
   const [data, setData] = useState<ISearchResultItem[]>([]);
   const [exhausted, setExhausted] = useState<boolean>(false);
@@ -20,8 +22,31 @@ export const MainSearch: React.FC = memo(() => {
   const handleSearch = async (value: any) => {
     try {
       if (value) {
-        const result = await github.searchRepos(value);
-        setData(result);
+        const includesDomain = value.includes(githubUrl)
+        const withoutDomain = value.replace(githubUrl, "");
+
+        if (includesDomain) {
+          const [owner, repo] = withoutDomain.split("/");
+
+          if (owner && repo) {
+            const exists = await github.existsRepo(withoutDomain);
+
+            if (exists) {
+              handleSelect(withoutDomain)
+            } else {
+              const result = await github.searchRepos(withoutDomain);
+              setData(result);
+            }
+          } else {
+            const result = await github.searchRepos(withoutDomain);
+            setData(result);
+          }
+          
+        } else {
+          const result = await github.searchRepos(value);
+          setData(result);
+        }
+        
       } else {
         setData([]);
       }
@@ -57,7 +82,7 @@ export const MainSearch: React.FC = memo(() => {
             size="large"
             className={styles.select}
             filterOption={false}
-            defaultActiveFirstOption={false}
+            defaultActiveFirstOption={true}
             notFoundContent={null}
             showSearch
             placeholder="&nbsp;&nbsp;&nbsp;&nbsp; Repo name, e.g. bitcoin/bitcoin"
