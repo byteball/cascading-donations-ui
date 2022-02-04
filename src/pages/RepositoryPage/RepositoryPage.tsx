@@ -49,12 +49,12 @@ export const RepositoryPage: React.FC = () => {
   const getContributors = useCallback(async () => await Github.getContributors(owner + "/" + name).then(data => setContributors(data)), [owner, name]);
   const checkFullSetup = useCallback(async () => await Github.checkBanner(owner + "/" + name).then(data => setIsFullSetup(data)), [owner, name]);
 
-  const getRules = useCallback(async () => {
+  const getRules = useCallback(async (isHttpRequest: boolean = false) => {
     if (owner && name) {
       setRules({ rules: [], status: "loading" })
-      await Agent.getRules(owner + "/" + name).then(([rules]) => setRules({ status: "loaded", rules: Object.entries(rules).map(([repo, percent]) => ({ repo, percent })) }));
+      await Agent.getRules(owner + "/" + name, isHttpRequest).then(([rules]) => setRules({ status: "loaded", rules: Object.entries(rules).map(([repo, percent]) => ({ repo, percent })) }));
     }
-  }, [owner, name])
+  }, [owner, name]);
 
 
   useInterval(getRules, 1000 * 60 * 15);
@@ -64,7 +64,7 @@ export const RepositoryPage: React.FC = () => {
       getBasicInformation();
       getContributors();
       checkFullSetup();
-      getRules();
+      getRules(true);
     }
   }, [getBasicInformation, getContributors, checkFullSetup, getRules])
 

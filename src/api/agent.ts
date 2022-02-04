@@ -25,14 +25,33 @@ interface IPoolsByRepo {
 type getRulesResult = [IRules, boolean];
 
 export class Agent {
-  static getRules = async (fullName: string): Promise<getRulesResult> => {
+  static getRules = async (fullName: string, isHttpRequest?: boolean): Promise<getRulesResult> => {
     let exists = true;
+    let rules = {} as IStateVars;
     const var_prefix = `${fullName}*rules`;
 
-    let rules = await client.api.getAaStateVars({
-      address: config.aa_address,
-      var_prefix
-    }) as IStateVars;
+    if (!isHttpRequest) {
+      rules = await client.api.getAaStateVars({
+        address: config.aa_address,
+        var_prefix
+      }) as IStateVars;
+    } else {
+      rules = await fetch(`${config.hub_api_url}/get_aa_state_vars`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({ address: config.aa_address, var_prefix })
+      }).then(async (response) => {
+        const res = await response.json();
+        if (res.error) throw Error(res.error);
+        return res.data;
+      }).catch(async _ => await client.api.getAaStateVars({
+        address: config.aa_address,
+        var_prefix
+      }));
+    }
 
     if (isEmpty(rules)) {
       rules = {};
