@@ -30,7 +30,7 @@ interface ITokenAmount {
   symbol: string;
 }
 
-type tokenAmounts = Array<ITokenAmount>;
+export type tokenAmounts = Array<ITokenAmount>;
 
 export class Agent {
   static getRules = async (fullName: string, isHttpRequest?: boolean): Promise<getRulesResult> => {
