@@ -4,6 +4,7 @@ import config from 'config';
 import { Attestation } from 'obyte';
 import { client } from 'obyteInstance';
 import github from 'api/github';
+import { ITokenByNetwork } from './backend';
 
 export interface IStateVars {
   [key: string]: any;
@@ -24,15 +25,41 @@ interface IPoolsByRepo {
 
 type getRulesResult = [IRules, boolean];
 
+interface ITokenAmount {
+  amount: number;
+  symbol: string;
+}
+
+type tokenAmounts = Array<ITokenAmount>;
+
 export class Agent {
-  static getRules = async (fullName: string): Promise<getRulesResult> => {
+  static getRules = async (fullName: string, isHttpRequest?: boolean): Promise<getRulesResult> => {
     let exists = true;
+    let rules = {} as IStateVars;
     const var_prefix = `${fullName}*rules`;
 
-    let rules = await client.api.getAaStateVars({
-      address: config.aa_address,
-      var_prefix
-    }) as IStateVars;
+    if (!isHttpRequest) {
+      rules = await client.api.getAaStateVars({
+        address: config.aa_address,
+        var_prefix
+      }) as IStateVars;
+    } else {
+      rules = await fetch(`${config.hub_api_url}/get_aa_state_vars`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({ address: config.aa_address, var_prefix })
+      }).then(async (response) => {
+        const res = await response.json();
+        if (res.error) throw Error(res.error);
+        return res.data;
+      }).catch(async _ => await client.api.getAaStateVars({
+        address: config.aa_address,
+        var_prefix
+      }));
+    }
 
     if (isEmpty(rules)) {
       rules = {};
@@ -100,6 +127,53 @@ export class Agent {
     }
 
     return pools
+  }
+
+  static getTotalReceivedByFullName = async (fullName: string, tokens: ITokenByNetwork) => {
+    let receivedTokens: tokenAmounts = [];
+    let totalReceivedInUSD = 0;
+
+    let undistributedTokens: tokenAmounts = [];
+    let totalUndistributedInUSD = 0;
+
+    const totalReceivedStateVars = await client.api.getAaStateVars({
+      address: config.aa_address,
+      var_prefix: `${fullName}*total_received*` // var[${repo}*total_received*${asset}] - total received by repo in asset
+    }) as IStateVars;
+
+    const totalUndistributedStateVars = await client.api.getAaStateVars({
+      address: config.aa_address,
+      var_prefix: `${fullName}*pool*` // var[${repo}*pool*${asset}] - repo's undistributed pool in asset
+    }) as IStateVars;
+
+    Object.entries(totalReceivedStateVars).forEach(([varName, amount]) => {
+      const asset = varName.split("*")?.[2];
+
+      const assetInfo = tokens[asset];
+
+      if (assetInfo && assetInfo.price) {
+        const amountInUSD = (amount / 10 ** assetInfo.decimals) * assetInfo.price;
+
+        totalReceivedInUSD += amountInUSD;
+
+        receivedTokens.push({ amount: amount / 10 ** assetInfo.decimals, symbol: assetInfo.symbol })
+      }
+    });
+
+    Object.entries(totalUndistributedStateVars).forEach(([varName, amount]) => {
+      const asset = varName.split("*")?.[2];
+
+      const assetInfo = tokens[asset];
+
+      if (assetInfo && assetInfo.price && Number(amount)) {
+        const amountInUSD = (amount / 10 ** assetInfo.decimals) * assetInfo.price;
+
+        totalUndistributedInUSD += amountInUSD;
+        undistributedTokens.push({ amount: amount / 10 ** assetInfo.decimals, symbol: assetInfo.symbol })
+      }
+    });
+
+    return { received: totalReceivedInUSD, undistributed: totalUndistributedInUSD, receivedTokens, undistributedTokens }
   }
 
   static getManagementList = async (owner: string, query?: string) => {

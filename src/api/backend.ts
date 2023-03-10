@@ -32,20 +32,16 @@ export interface IToken {
   price?: number | null;
 }
 
+export interface ITokenByNetwork {
+  [key: string]: IToken
+}
+
 export interface ITokens {
   data: {
-    Obyte?: {
-      [key: string]: IToken
-    },
-    Ethereum?: {
-      [key: string]: IToken
-    },
-    BSC?: {
-      [key: string]: IToken
-    },
-    Polygon?: {
-      [key: string]: IToken
-    },
+    Obyte?: ITokenByNetwork,
+    Ethereum?: ITokenByNetwork,
+    BSC?: ITokenByNetwork,
+    Polygon?: ITokenByNetwork,
   }
 }
 

@@ -47,6 +47,29 @@
   margin-top: 40px;
 }
 
+.basicInfoWrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.donationInfo {
+  border: 2px solid #DDDCDE;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 16px;
+  border-radius: 20px;
+  box-sizing: border-box;
+}
+
+.underline {
+  border-bottom: 1px dotted #0037ff;
+}
+
+
 @media (max-width: 992px) {
   .headerWrap {
     flex-direction: column;
@@ -63,6 +86,16 @@
 @media (max-width: 600px) {
   .header {
     flex-direction: column;
+  }
+
+  .basicInfoWrap {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .donationInfo {
+    margin-top: 20px;
+    text-align: start;
   }
 
   .title {
