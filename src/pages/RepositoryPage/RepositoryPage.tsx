@@ -11,6 +11,7 @@ import { getAvatarLink, truncate } from "utils";
 import { IContributor, IRepoInfo } from 'store/slices/cacheSlice';
 import { ContributorList } from "components/Contributor/Contributor";
 import { addFavorite, removeFavorite, selectFavorites, selectGithubUsers } from "store/slices/settingsSlice";
+import { selectObyteTokens } from "store/slices/tokensSlice";
 import { selectEvents } from "store/slices/responsesSlice";
 import { EventList } from "components/Event/Event";
 import { IEvent } from 'utils/responseToEvent';
@@ -39,22 +40,27 @@ export const RepositoryPage: React.FC = () => {
   const [contributors, setContributors] = useState<IContributor[]>();
   const [isFullSetup, setIsFullSetup] = useState<boolean>(false);
   const [rules, setRules] = useState<ILoadedRules>({ status: "loading", rules: [] })
+  const [totals, setTotals] = useState({ received: 0, undistributed: 0, receivedTokens: [], undistributedTokens: [], loading: true });
 
   const dispatch = useDispatch();
   const favorites = useSelector(selectFavorites);
   const recentEvents = useSelector(selectEvents);
   const githubUsers = useSelector(selectGithubUsers);
+  const tokensOnObyteNetwork = useSelector(selectObyteTokens);
 
   const getBasicInformation = useCallback(async () => await Github.getBasicInformation(owner + "/" + name).then(data => setBasicInfo(data)), [owner, name]);
   const getContributors = useCallback(async () => await Github.getContributors(owner + "/" + name).then(data => setContributors(data)), [owner, name]);
   const checkFullSetup = useCallback(async () => await Github.checkBanner(owner + "/" + name).then(data => setIsFullSetup(data)), [owner, name]);
 
   const getRules = useCallback(async (isHttpRequest: boolean = false) => {
-    if (owner && name) {
-      setRules({ rules: [], status: "loading" })
+    if (owner && name && tokensOnObyteNetwork) {
+      setRules({ rules: [], status: "loading" });
+      setTotals({ received: 0, undistributed: 0, receivedTokens: [], undistributedTokens: [], loading: true });
+
       await Agent.getRules(owner + "/" + name, isHttpRequest).then(([rules]) => setRules({ status: "loaded", rules: Object.entries(rules).map(([repo, percent]) => ({ repo, percent })) }));
+      await Agent.getTotalReceivedByFullName(owner + "/" + name, tokensOnObyteNetwork || {}).then(data => setTotals({ ...data, loading: false })).catch(() => setTotals({ received: 0, undistributed: 0, receivedTokens: [], undistributedTokens: [], loading: true }));
     }
-  }, [owner, name]);
+  }, [owner, name, tokensOnObyteNetwork]);
 
 
   useInterval(getRules, 1000 * 60 * 15);
@@ -107,13 +113,23 @@ export const RepositoryPage: React.FC = () => {
         </Space>
       </div>
 
-      <div className={styles.basicInfo}>
-        <div className={styles.description}>{basicInfo.description || "No description"}</div>
-        <div className={styles.actionsWrap}>
-          {basicInfo.language && <div className={styles.action}>{basicInfo.language}</div>}
-          <div className={styles.action}>{basicInfo.stargazers_count} <StarOutlined /></div>
-          <div className={styles.action}>{basicInfo.forks_count} <ForkOutlined /></div>
+      <div className={styles.basicInfoWrap}>
+        <div className={styles.basicInfo}>
+          <div className={styles.description}>{basicInfo.description || "No description"}</div>
+          <div className={styles.actionsWrap}>
+            {basicInfo.language && <div className={styles.action}>{basicInfo.language}</div>}
+            <div className={styles.action}>{basicInfo.stargazers_count} <StarOutlined /></div>
+            <div className={styles.action}>{basicInfo.forks_count} <ForkOutlined /></div>
+          </div>
         </div>
+        {!totals.loading && <div className={styles.donationInfo}>
+          <div>
+            Total donated: {totals.received ? <Tooltip placement="right" title={<span>{totals.receivedTokens.map(({ amount, symbol }) => <div key={symbol}>{amount} {symbol}</div>)}</span>}><span className={styles.underline}> ${+Number(totals.received).toFixed(2)}</span></Tooltip> : '$0'}
+          </div>
+          <div>
+            Undistributed: {totals.undistributed ? <Tooltip placement="right" title={<span>{totals.undistributedTokens.map(({ amount, symbol }) => <div key={symbol}>{amount} {symbol}</div>)}</span>}><span className={styles.underline}> ${+Number(totals.undistributed).toFixed(2)}</span></Tooltip> : '$0'}
+          </div>
+        </div>}
       </div>
 
       <div className={styles.contentBlock}>
