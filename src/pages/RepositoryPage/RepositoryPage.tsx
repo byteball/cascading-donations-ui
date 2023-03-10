@@ -19,7 +19,7 @@ import { SettingsModal } from "modals";
 
 import { NotFound } from "components/NotFound/NotFound";
 import { IParsedRule } from "components/Recipient/Recipient";
-import { Agent } from "api/agent";
+import { Agent, tokenAmounts } from "api/agent";
 import Github from 'api/github';
 
 import styles from "./RepositoryPage.module.css";
@@ -32,6 +32,15 @@ interface ILoadedRules {
   status: "loading" | "loaded"
 }
 
+interface ITotalsState {
+  received: number;
+  undistributed: number;
+  receivedTokens: tokenAmounts;
+  undistributedTokens: tokenAmounts;
+  loading: boolean;
+}
+
+
 export const RepositoryPage: React.FC = () => {
   let { owner, name } = useParams();
   owner = owner?.toLowerCase();
@@ -40,7 +49,7 @@ export const RepositoryPage: React.FC = () => {
   const [contributors, setContributors] = useState<IContributor[]>();
   const [isFullSetup, setIsFullSetup] = useState<boolean>(false);
   const [rules, setRules] = useState<ILoadedRules>({ status: "loading", rules: [] })
-  const [totals, setTotals] = useState({ received: 0, undistributed: 0, receivedTokens: [], undistributedTokens: [], loading: true });
+  const [totals, setTotals] = useState<ITotalsState>({ received: 0, undistributed: 0, receivedTokens: [], undistributedTokens: [], loading: true });
 
   const dispatch = useDispatch();
   const favorites = useSelector(selectFavorites);
@@ -58,7 +67,7 @@ export const RepositoryPage: React.FC = () => {
       setTotals({ received: 0, undistributed: 0, receivedTokens: [], undistributedTokens: [], loading: true });
 
       await Agent.getRules(owner + "/" + name, isHttpRequest).then(([rules]) => setRules({ status: "loaded", rules: Object.entries(rules).map(([repo, percent]) => ({ repo, percent })) }));
-      await Agent.getTotalReceivedByFullName(owner + "/" + name, tokensOnObyteNetwork || {}).then(data => setTotals({ ...data, loading: false })).catch(() => setTotals({ received: 0, undistributed: 0, receivedTokens: [], undistributedTokens: [], loading: true }));
+      await Agent.getTotalReceivedByFullName(owner + "/" + name, tokensOnObyteNetwork || {}).then(data => setTotals({ received: data.received, undistributed: data.undistributed, receivedTokens: data.receivedTokens, undistributedTokens: data.undistributedTokens, loading: false })).catch(() => setTotals({ received: 0, undistributed: 0, receivedTokens: [], undistributedTokens: [], loading: true }));
     }
   }, [owner, name, tokensOnObyteNetwork]);
 
