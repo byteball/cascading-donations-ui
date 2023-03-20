@@ -27,7 +27,7 @@ export const MainMenu: React.FC<IMainMenu> = ({ mode, pathname, onClose }) => {
       onOpenChange={() => {
         onClose && onClose();
       }}
-      selectable={false}
+      selectable={true}
       onSelect={() => {
         onClose && onClose();
       }}
