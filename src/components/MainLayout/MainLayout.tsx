@@ -54,7 +54,7 @@ export const MainLayout: React.FC = ({ children }) => {
         ) : (
           <div className={styles.drawerWrap}>
             <Drawer
-              title={<NavLink to="/" style={{ color: "#fff" }}>KIVACH</NavLink>}
+              title={<NavLink to="/" style={{ color: "#fff" }} onClick={() => setActiveMenu(false)}>KIVACH</NavLink>}
               placement="left"
               closable={true}
               closeIcon={<CloseOutlined style={{ color: "#fff" }} />}
