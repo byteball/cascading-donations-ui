@@ -132,10 +132,10 @@ export const RepositoryPage: React.FC = () => {
           </div>
         </div>
         {!totals.loading && <div className={styles.donationInfo}>
-          <div>
+          <div className={styles.donationInfoRow}>
             Total donated: {totals.received ? <Tooltip placement="right" title={<span>{totals.receivedTokens.map(({ amount, symbol }) => <div key={symbol}>{amount} {symbol}</div>)}</span>}><span className={styles.underline}> ${+Number(totals.received).toFixed(2)}</span></Tooltip> : '$0'}
           </div>
-          <div>
+          <div className={styles.donationInfoRow}>
             Undistributed: {totals.undistributed ? <Tooltip placement="right" title={<span>{totals.undistributedTokens.map(({ amount, symbol }) => <div key={symbol}>{amount} {symbol}</div>)}</span>}><span className={styles.underline}> ${+Number(totals.undistributed).toFixed(2)}</span></Tooltip> : '$0'}
           </div>
         </div>}

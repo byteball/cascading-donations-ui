@@ -28,6 +28,7 @@
 .description {
   color: #767676;
   font-size: 18px;
+  max-width: 75%;
 }
 
 .actionsWrap {
@@ -63,6 +64,10 @@
   font-size: 16px;
   border-radius: 20px;
   box-sizing: border-box;
+}
+
+.donationInfoRow {
+  white-space: nowrap;
 }
 
 .underline {
@@ -102,5 +107,9 @@
     font-size: 24px !important;
     margin-top: 5px !important;
     margin-bottom: 10px !important;
+  }
+
+  .description{ 
+    max-width: initial;
   }
 }
